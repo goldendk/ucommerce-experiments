@@ -34,7 +34,7 @@ public class DefaultObjectFactory extends ObjectFactory {
         }
 
         if (constToUse == null) {
-            throw new IllegalStateException("No fitting constructor found for " + clazz.getName());
+            throw new IllegalStateException("No fitting constructor found for " + typeToConstruct);
         }
 
         List<Object> params = new ArrayList<>();

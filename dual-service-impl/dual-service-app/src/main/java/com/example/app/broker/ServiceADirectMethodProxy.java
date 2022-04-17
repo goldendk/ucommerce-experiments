@@ -1,4 +1,4 @@
-package com.example.broker;
+package com.example.app.broker;
 
 import com.example.service.ServiceA;
 import com.example.service.ServiceAProxy;

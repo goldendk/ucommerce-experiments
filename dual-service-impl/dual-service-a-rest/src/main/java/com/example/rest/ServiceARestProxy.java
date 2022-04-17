@@ -1,6 +1,8 @@
-package com.example.broker;
+package com.example.rest;
 
 import com.example.service.ServiceAProxy;
+import com.example.shared.configuration.ModuleConfig;
+import com.example.shared.configuration.PropertyName;
 import com.example.shared.exceptions.RemoteServiceException;
 
 import java.io.IOException;
@@ -11,9 +13,16 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 public class ServiceARestProxy implements ServiceAProxy {
+
+    private final String url;
+
+    public ServiceARestProxy() {
+        this.url = ModuleConfig.loadConfiguration().getStringList(PropertyName.of("service.url.a")).get(0);
+    }
+
     @Override
     public int calculateSum(int a, int b) {
-        URI uri = URI.create("http://localhost:4567/hello?a=2&b=5");
+        URI uri = URI.create(url + "?a=" + a + "&b=" + b);
         HttpRequest build = HttpRequest.newBuilder().uri(uri)
                 .GET()
                 .timeout(Duration.ofSeconds(2))
