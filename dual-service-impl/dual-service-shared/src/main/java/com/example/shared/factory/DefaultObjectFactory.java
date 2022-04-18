@@ -56,7 +56,7 @@ public class DefaultObjectFactory extends ObjectFactory {
 
     }
 
-    public void register(Class superClass, Class toCreate) {
+    public <C> void register(Class<? super C> superClass, Class<C> toCreate) {
         Objects.requireNonNull(superClass);
         Objects.requireNonNull(toCreate);
 
@@ -76,7 +76,7 @@ public class DefaultObjectFactory extends ObjectFactory {
     }
 
 
-    public void register(Map<Class, Class> theMap) {
+    public <C> void register(Map<Class<? super C>, Class<C>> theMap) {
         theMap.forEach((k, v) -> {
             register(k, v);
         });

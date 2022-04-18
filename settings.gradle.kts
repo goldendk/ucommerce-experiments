@@ -13,3 +13,19 @@ include("dual-service-impl:dual-service-a-rest")
 findProject(":dual-service-impl:dual-service-a-rest")?.name = "dual-service-a-rest"
 include("dual-service-impl:dual-service-a-api")
 findProject(":dual-service-impl:dual-service-a-api")?.name = "dual-service-a-api"
+include("modules")
+include("modules:inventory")
+findProject(":modules:inventory")?.name = "inventory"
+include("modules:inventory:inventory-core")
+findProject(":modules:inventory:inventory-core")?.name = "inventory-core"
+include("modules:inventory:inventory-rest")
+findProject(":modules:inventory:inventory-rest")?.name = "inventory-rest"
+include("modules:inventory:inventory-api")
+findProject(":modules:inventory:inventory-api")?.name = "inventory-api"
+include("modules:shared-kernel")
+findProject(":modules:shared-kernel")?.name = "shared-kernel"
+include("libraries")
+include("libraries:annotation-processor")
+findProject(":libraries:annotation-processor")?.name = "annotation-processor"
+include("modules:test-app")
+findProject(":modules:test-app")?.name = "test-app"
