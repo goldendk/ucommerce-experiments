@@ -37,7 +37,6 @@
         </processorPath>
         <module name="ucommerce-experiments.modules.inventory.inventory-api.main" />
         <module name="ucommerce-experiments.modules.inventory.inventory-rest.main" />
-        <module name="ucommerce-experiments.modules.test-app.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />

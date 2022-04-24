@@ -26,3 +26,13 @@ a single line of code in order to get the REST layer for @ExternalService genera
 Instead, a special plugin generating the source should be implemented.
 Different plugin settings could generate different REST library implementations.
 
+#### update --
+Code generation using a Gradle plugin seems the way to go. There is an example here: 
+
+https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-gradle-plugin/src/main/kotlin/org/openapitools/generator/gradle/plugin/OpenApiGeneratorPlugin.kt
+
+This link solved the "add source folder" problem: https://discuss.gradle.org/t/how-do-i-add-directories-to-the-main-resources-sourceset-in-a-gradle-plugin/5953/3
+
+>Test command: ./gradlew -info clean :modules:test-app:assemble :modules:inventory:inventory-api:assemble
+
+> Look at this: https://www.baeldung.com/gradle-source-sets
