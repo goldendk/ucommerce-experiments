@@ -1,6 +1,5 @@
 plugins {
-    id("java-library")
-    id("idea")
+    id ("java" )
 }
 
 group "org.ucommerce"
@@ -11,7 +10,12 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor(project(":libraries:annotation-processor"))
+
+
+    annotationProcessor("com.google.auto.service:auto-service:1.0.1")
+    implementation("com.google.auto.service:auto-service:1.0.1")
+    testImplementation("com.google.testing.compile:compile-testing:0.19")
+    testImplementation("com.google.guava:guava:16.0.1")
     implementation(project(":modules:shared-kernel"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")

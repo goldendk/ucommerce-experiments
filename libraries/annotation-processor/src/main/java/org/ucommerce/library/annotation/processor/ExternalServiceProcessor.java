@@ -6,6 +6,11 @@ import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
+import javax.tools.JavaFileObject;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Set;
 
 @SupportedAnnotationTypes(
@@ -19,12 +24,27 @@ public class ExternalServiceProcessor extends AbstractProcessor {
                            RoundEnvironment roundEnv) {
 
         System.out.println("Starting ExternalServiceProcessor");
+
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, processingEnv.getOptions().toString() + "\n");
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Current working directory: " + new File(".").getAbsolutePath() + "\n");
         for (TypeElement annotation : annotations) {
             Set<? extends Element> annotatedElements
                     = roundEnv.getElementsAnnotatedWith(annotation);
 
-            System.out.println("This is running now.");
-
+            for (Element element : annotatedElements) {
+                System.out.println(element);
+                try {
+                    JavaFileObject sourceFile = processingEnv.getFiler().createSourceFile("org.ucommerce.generated.SomeFile", element);
+                    try (PrintWriter out = new PrintWriter(sourceFile.openWriter())) {
+                        out.println("package org.ucommerce.generated; \n public class SomeFile{}");
+                    }
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, sourceFile.toUri().toString());
+                    //Class<?> aClass = Class.forName("org.ucommerce.library.annotation.processor.MethodAData");
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, sourceFile.toUri().toString());
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
         System.out.println("Finishing ExternalServiceProcessor");
         return true;

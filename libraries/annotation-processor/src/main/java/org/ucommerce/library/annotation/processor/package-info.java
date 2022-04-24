@@ -18,6 +18,8 @@
  * <ul>
  * <li>Google library : https://javadoc.io/doc/com.google.testing.compile/compile-testing/latest/index.html</li>
  * <li>Example usage : https://github.com/tommy-bo/junit-ignore-processor</li>
+ * <li>Baeldung tutorial: https://www.baeldung.com/java-annotation-processing-builder</li>
+ * <li>Example annotation processor implementation: https://github.com/eugenp/tutorials/tree/master/annotations</li>
  * </ul>
  *
  *
