@@ -29,3 +29,5 @@ include("libraries:annotation-processor")
 findProject(":libraries:annotation-processor")?.name = "annotation-processor"
 include("modules:test-app")
 findProject(":modules:test-app")?.name = "test-app"
+include("libraries:gradle-plugin-code-generator")
+findProject(":libraries:gradle-plugin-code-generator")?.name = "gradle-plugin-code-generator"

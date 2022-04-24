@@ -2,6 +2,8 @@ plugins {
     id("java")
     id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.example.greeting")
+
 }
 
 group = "org.ucommerce"
@@ -21,4 +23,9 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+greeting{
+    product = "foo22"
+    customer = "bar22"
 }

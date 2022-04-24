@@ -36,6 +36,7 @@
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.3/ba035118bc8bac37d7eff77700720999acd9986d/j2objc-annotations-1.3.jar" />
         </processorPath>
         <module name="ucommerce-experiments.modules.inventory.inventory-api.main" />
+        <module name="ucommerce-experiments.modules.inventory.inventory-rest.main" />
         <module name="ucommerce-experiments.modules.test-app.main" />
       </profile>
     </annotationProcessing>

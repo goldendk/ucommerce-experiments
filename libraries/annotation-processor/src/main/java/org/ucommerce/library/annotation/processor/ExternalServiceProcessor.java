@@ -27,6 +27,9 @@ public class ExternalServiceProcessor extends AbstractProcessor {
 
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, processingEnv.getOptions().toString() + "\n");
         processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, "Current working directory: " + new File(".").getAbsolutePath() + "\n");
+
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, System.getenv().toString() + "\n");
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, System.getProperties().toString() + "\n");
         for (TypeElement annotation : annotations) {
             Set<? extends Element> annotatedElements
                     = roundEnv.getElementsAnnotatedWith(annotation);
