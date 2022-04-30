@@ -1,4 +1,4 @@
-package org.example;
+package com.ucommerce.codegen;
 
 import kotlin.Suppress;
 import org.gradle.api.DefaultTask;

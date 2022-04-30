@@ -1,4 +1,5 @@
 rootProject.name = "ucommerce-experiments"
+includeBuild("tooling/gradle-plugin-codegen")
 include("dual-service-impl:service-a")
 findProject(":dual-service-impl:service-a")?.name = "service-a"
 include("dual-service-impl:service-b")

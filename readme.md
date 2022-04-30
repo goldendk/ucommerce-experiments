@@ -36,3 +36,10 @@ This link solved the "add source folder" problem: https://discuss.gradle.org/t/h
 >Test command: ./gradlew -info clean :modules:test-app:assemble :modules:inventory:inventory-api:assemble
 
 > Look at this: https://www.baeldung.com/gradle-source-sets
+
+### 30-04-2022 - Code-gen day
+Working on getting composite builds to work. The includeBuild command must be in the 
+parent settings.gradle.kts file. Note: the top-level build.gradle is not needed for the build to work 
+since there are no module wide rules to enforce yet. 
+Might want to change that and add test dependencies that are shared later.
+

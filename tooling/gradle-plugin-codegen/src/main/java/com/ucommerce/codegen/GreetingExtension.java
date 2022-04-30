@@ -1,4 +1,4 @@
-package org.example;
+package com.ucommerce.codegen;
 
 public class GreetingExtension {
 
