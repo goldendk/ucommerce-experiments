@@ -43,7 +43,8 @@ parent settings.gradle.kts file. Note: the top-level build.gradle is not needed 
 since there are no module wide rules to enforce yet. 
 Might want to change that and add test dependencies that are shared later.
 
-Challenges for the code-gen plugin:
-- foo
-  [second-readme](second-readme.md)
+Tasks for the code generator
+- Testing the generated code. The google testing library used for the annotation processor seems promising but adding a classpath for Spring MVC could prove complicated.
+- Making a builder pattern that allows for multiple outputs when reflecting over a single Java interface.
+
 

@@ -1,0 +1,33 @@
+@startuml
+
+
+
+Class CodegenDirector
+CodegenDirector : construct()
+
+interface SourceCodeBuilder
+SourceCodeBuilder : +initialiseClass(Class)
+
+SourceCodeBuilder : +startMethod(Class, Method method, Class returnType)
+SourceCodeBuilder : +addParameter(Class, Method method, Class paramType)
+SourceCodeBuilder : +finishMethod(Class, Method method)
+SourceCodeBuilder : +finishClass()
+
+abstract class JavaSourceBuilder
+note left: Contains shared functions for all \n code builders.
+
+Class DirectMethodProxyBuilder
+Class SpringRestBuilder
+
+Class GeneratedFile
+GeneratedFile : -file : File
+GeneratedFile : -content : String
+GeneratedFile : +writeToFile()
+
+CodegenDirector o--> SourceCodeBuilder
+SourceCodeBuilder <|-- JavaSourceBuilder
+JavaSourceBuilder <|-- SpringRestBuilder
+JavaSourceBuilder <|-- DirectMethodProxyBuilder
+JavaSourceBuilder --> GeneratedFile
+
+@enduml

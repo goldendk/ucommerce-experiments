@@ -23,7 +23,6 @@ abstract public class GreetingPlugin implements Plugin<Project> {
 
     @Override
     public void apply(Project target) {
-
         target.getExtensions().create("greeting", GreetingExtension.class);
 //        target.getPlugins().withType(JavaPlugin.class, new Action<JavaPlugin>() {
 //            @Override

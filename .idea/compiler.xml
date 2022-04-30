@@ -2,7 +2,6 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="true" />
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
@@ -19,7 +18,7 @@
         </processorPath>
         <module name="ucommerce-experiments.libraries.annotation-processor.main" />
       </profile>
-      <profile name="Gradle Imported" enabled="true" procOnly="true">
+      <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$PROJECT_DIR$/libraries/annotation-processor/build/libs/annotation-processor.jar" />
