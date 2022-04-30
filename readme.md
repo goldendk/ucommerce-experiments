@@ -43,3 +43,7 @@ parent settings.gradle.kts file. Note: the top-level build.gradle is not needed 
 since there are no module wide rules to enforce yet. 
 Might want to change that and add test dependencies that are shared later.
 
+Challenges for the code-gen plugin:
+- foo
+  [second-readme](second-readme.md)
+
