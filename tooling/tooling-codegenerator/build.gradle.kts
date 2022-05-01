@@ -1,4 +1,5 @@
 apply(from = "../../gradle/common/shared-deps.gradle")
+apply(from = "../../gradle/common/shared-test-deps.gradle")
 
 plugins {
     id("java-library")
@@ -12,12 +13,14 @@ repositories {
 }
 
 dependencies {
-    //implementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    //implementation("com.google.guava:guava:31.1-jre")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    implementation("org.ucommerce:shared-kernel:1.0-SNAPSHOT")
+
 }
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("-parameters")
 }

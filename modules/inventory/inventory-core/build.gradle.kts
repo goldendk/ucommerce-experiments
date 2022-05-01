@@ -12,7 +12,7 @@ repositories {
 dependencies {
 
     implementation(project(":modules:inventory:inventory-api"))
-    api(project(":modules:shared-kernel"))
+    api("org.ucommerce:shared-kernel:1.0-SNAPSHOT")
 
     implementation("org.slf4j:slf4j-api:1.6.1")
     implementation("org.slf4j:slf4j-simple:1.6.1")

@@ -1,4 +1,4 @@
-package com.ucommerce.codegen.builders;
+package com.ucommerce.testapp;
 
 
 import com.google.common.base.Preconditions;

@@ -48,3 +48,20 @@ Tasks for the code generator
 - Making a builder pattern that allows for multiple outputs when reflecting over a single Java interface.
 
 
+### 1-05-2022 more code-gen 
+How is a code-generator best build. The director class can easily iterate over method and parameters but what actually changes across different 
+code generators.
+
+
+> BarRecord getBar(String name) // api method
+
+- return type can change - be the same or other. Can cause additional classes created or new import statements.
+- annotation for methods can vary.
+- Parameters might need annotations.
+
+There was an issue with getting the correct parameter names in the generated code. Adding -paramters to the JVM compiling the 
+module code should fix the issue.
+>https://stackoverflow.com/questions/21455403/how-to-get-method-parameter-names-in-java-8-using-reflection/21455958#21455958
+
+Ending for today - the results are fine as it is though the building process is cumbersome. Hopefully the efforts will prove off once 
+more interfaces are defined and the amount of code generated is higher.

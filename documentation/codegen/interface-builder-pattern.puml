@@ -6,15 +6,26 @@ Class CodegenDirector
 CodegenDirector : construct()
 
 interface SourceCodeBuilder
-SourceCodeBuilder : +initialiseClass(Class)
-
-SourceCodeBuilder : +startMethod(Class, Method method, Class returnType)
-SourceCodeBuilder : +addParameter(Class, Method method, Class paramType)
-SourceCodeBuilder : +finishMethod(Class, Method method)
+SourceCodeBuilder : +startClass(Class) // can create fields
+SourceCodeBuilder : +startMethodSignature(Class, Method method, Class returnType) //add returnType to code
+SourceCodeBuilder : +startParameters()
+SourceCodeBuilder : +addParameter(Class, Method method, Class paramType) // add paramType to code
+SourceCodeBuilder : +endParameters()
+SourceCodeBuilder : +buildMethodBody(Class, Method method)
+SourceCodeBuilder : +finishMethodBlock(Class, Method method)
 SourceCodeBuilder : +finishClass()
 
+
+
 abstract class JavaSourceBuilder
-note left: Contains shared functions for all \n code builders.
+note left: Contains shared functions for all \n Java code builders.
+JavaSourceBuilder : resolveVisibility(Method m) : String
+JavaSourceBuilder : resolveReturnType(String m) : String // can make new files
+JavaSourceBuilder : resolveMethodName(Method m) : String
+JavaSourceBuilder : resolveParameterAnnotations(Method m, Parameter p) : String[]
+JavaSourceBuilder : resolveMethodAnnotations(Method m) : String[]
+JavaSourceBuilder : resolveParameterTypeAndName(Method m, Parameter p) : String // can make new files
+
 
 Class DirectMethodProxyBuilder
 Class SpringRestBuilder
@@ -24,10 +35,26 @@ GeneratedFile : -file : File
 GeneratedFile : -content : String
 GeneratedFile : +writeToFile()
 
+
+Class GeneratedJavaFile
+GeneratedJavaFile : -targetPackage : String
+GeneratedJavaFile : -imports : List<String>[]
+GeneratedJavaFile : -classSignature : List<String>[] //also annotations.
+GeneratedJavaFile : -fields : List<String>[]
+GeneratedJavaFile : -methods : List<String>[]
+
+
+class OAS30SourceBuilder
+note right: Example of other  type\n of code builder.
+
+
 CodegenDirector o--> SourceCodeBuilder
 SourceCodeBuilder <|-- JavaSourceBuilder
 JavaSourceBuilder <|-- SpringRestBuilder
 JavaSourceBuilder <|-- DirectMethodProxyBuilder
-JavaSourceBuilder --> GeneratedFile
+JavaSourceBuilder --> GeneratedJavaFile
+GeneratedFile <|-- GeneratedJavaFile
 
+SourceCodeBuilder <|-- OAS30SourceBuilder
+OAS30SourceBuilder --> GeneratedFile
 @enduml

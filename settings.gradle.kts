@@ -1,5 +1,6 @@
 rootProject.name = "ucommerce-experiments"
 includeBuild("tooling")
+includeBuild("modules/shared-kernel")
 include("dual-service-impl:service-a")
 findProject(":dual-service-impl:service-a")?.name = "service-a"
 include("dual-service-impl:service-b")
@@ -23,8 +24,7 @@ include("modules:inventory:inventory-rest")
 findProject(":modules:inventory:inventory-rest")?.name = "inventory-rest"
 include("modules:inventory:inventory-api")
 findProject(":modules:inventory:inventory-api")?.name = "inventory-api"
-include("modules:shared-kernel")
-findProject(":modules:shared-kernel")?.name = "shared-kernel"
+
 include("libraries")
 include("libraries:annotation-processor")
 findProject(":libraries:annotation-processor")?.name = "annotation-processor"
