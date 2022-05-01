@@ -25,7 +25,7 @@ class JavaSourceBuilderTest {
 
         //THEN
         JavaSourceFile javaSourceFile = spy.getGeneratedFiles().get(0);
-        assertEquals("package com.ucommerce.testapp;\n", javaSourceFile.getTargetPackage());
+        assertEquals("package com.ucommerce.testapp;", javaSourceFile.getTargetPackage());
     }
 
 
