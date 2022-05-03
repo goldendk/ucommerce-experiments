@@ -19,16 +19,20 @@ class DirectMethodProxyBuilderTest {
         builder = new DirectMethodProxyBuilder();
     }
     @Test
-    public void givenFooService_whenStartingClass_shouldCreateField(){
+    public void givenFooService_whenStartingClass_shouldCreateClassSignatureAndField(){
 
         //WHEN
         builder.startClass(FooService.class);
+        builder.buildClassSignature(FooService.class);
         builder.finishClass(); // to get data.
 
         //THEN
         List<JavaSourceFile> generatedFiles = builder.getGeneratedFiles();
         assertEquals(1, generatedFiles.size());
         JavaSourceFile file = generatedFiles.get(0);
+
+        assertEquals("""
+                public class FooServiceDirectProxy""", file.getClassSignature().get(0));
 
         assertEquals("""
                             private FooService delegate;
@@ -44,9 +48,9 @@ class DirectMethodProxyBuilderTest {
         //WHEN
         builder.startClass(FooService.class);
         builder.startMethodSignature(FooService.class, getBarMethod);
-        builder.startParameters();
+        builder.beforeParameters();
         builder.addParameter(getBarMethod, nameParameter);
-        builder.endParameters();
+        builder.afterParameters();
         builder.buildMethodBody(FooService.class, getBarMethod);
         builder.finishMethodBlock(FooService.class, getBarMethod);
         builder.finishClass();
@@ -59,6 +63,21 @@ class DirectMethodProxyBuilderTest {
                             this.delegate.getBar(name);
 
                         }""", generatedFiles.get(0).getMethods().get(0));
+
+    }
+
+    @Test
+    public void givenFooService_whenBuildingConstructors_shouldBuildCorrectConstructor(){
+        //GIVEN, WHEN
+        builder.startClass(FooService.class);
+        builder.buildConstructors(FooService.class);
+
+        //THEN
+        String constructor = builder.currentFile.getConstructors().get(0);
+        assertEquals("""
+                public FooServiceDirectProxy (FooService delegate) {
+                    this.delegate = delegate;
+                }""", constructor);
 
     }
 

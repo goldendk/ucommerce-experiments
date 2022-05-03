@@ -6,6 +6,10 @@ import org.ucommerce.shared.kernel.services.ExternalService;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Top level class in a builder pattern (See "Gang of four, Builder Pattern").
@@ -28,14 +32,23 @@ public class CodegenDirector {
         validateToConstruct(toConstruct);
 
         builder.startClass(toConstruct);
+        builder.buildClassSignature(toConstruct);
+        builder.buildConstructors(toConstruct);
 
-        for (Method method : toConstruct.getMethods()) {
+
+        List<Method> methods = Arrays.stream(toConstruct.getMethods())
+                .sorted(Comparator.comparing(Method::getName))
+                .collect(Collectors.toList());
+        for (Method method : methods) {
             builder.startMethodSignature(toConstruct, method);
-            builder.startParameters();
-            for(Parameter param : method.getParameters()){
+            builder.beforeParameters();
+            List<Parameter> parameters = Arrays.stream(method.getParameters())
+                    .sorted(Comparator.comparing(Parameter::getName))
+                    .collect(Collectors.toList());
+            for(Parameter param : parameters){
                 builder.addParameter(method, param);
             }
-            builder.endParameters();
+            builder.afterParameters();
             builder.buildMethodBody(toConstruct, method);
             builder.finishMethodBlock(toConstruct, method);
         }

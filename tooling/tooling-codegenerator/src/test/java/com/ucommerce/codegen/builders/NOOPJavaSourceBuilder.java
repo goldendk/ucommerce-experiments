@@ -9,7 +9,22 @@ public class NOOPJavaSourceBuilder extends JavaSourceBuilder {
 
 
     @Override
+    public void buildClassSignature(Class toConstruct) {
+
+    }
+
+    @Override
+    public void buildConstructors(Class toConstruct) {
+
+    }
+
+    @Override
     public void buildMethodBody(Class toConstruct, Method method) {
 
+    }
+
+    @Override
+    protected String resolveClassName(Class toConstruct) {
+        return toConstruct.getSimpleName()+"NOOP";
     }
 }

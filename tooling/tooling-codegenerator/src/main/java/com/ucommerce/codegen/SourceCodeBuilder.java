@@ -7,13 +7,17 @@ public interface SourceCodeBuilder {
 
     void startClass(Class toConstruct);
 
+    void buildClassSignature(Class toConstruct);
+
+    void buildConstructors(Class toConstruct);
+
     void startMethodSignature(Class toConstruct, Method method);
 
-    void startParameters();
+    void beforeParameters();
 
     void addParameter(Method method, Parameter parameterType);
 
-    void endParameters();
+    void afterParameters();
 
     void buildMethodBody(Class toConstruct, Method method);
     void finishMethodBlock(Class toConstruct, Method method);

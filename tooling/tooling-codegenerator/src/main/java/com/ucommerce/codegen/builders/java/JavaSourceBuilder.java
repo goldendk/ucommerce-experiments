@@ -23,11 +23,10 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
 
     @Override
     public void startClass(Class toConstruct) {
-        currentFile = new JavaSourceFile();
+        currentFile = new JavaSourceFile(resolvePackage(toConstruct), resolveClassName(toConstruct) + ".java");
         currentFile.setTargetPackage("package " + resolvePackage(toConstruct) + END);
     }
 
-    @Override
     public void finishClass() {
         generatedFiles.add(currentFile);
         currentFile = null;
@@ -43,13 +42,14 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
     }
 
     @Override
-    public void startParameters() {
+    public void beforeParameters() {
         methodBuilder.append("(");
     }
 
     @Override
-    public void endParameters() {
+    public void afterParameters() {
         methodBuilder.append("){" + NEW_LINE);
+        paramCount = 0;
     }
 
     public abstract void buildMethodBody(Class toConstruct, Method method);
@@ -103,6 +103,14 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
         return result;
     }
 
+
+    /**
+     * Resolves the <strong>target</strong> class name. The interface being generated from is provided as argument.
+     * @param toConstruct the interface to construct code from.
+     * @return the name of the generated class.
+     */
+    protected abstract String resolveClassName(Class toConstruct);
+
     protected String resolveMethodName(Method method) {
         return method.getName();
     }
@@ -123,4 +131,7 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
     public List<JavaSourceFile> getGeneratedFiles() {
         return generatedFiles;
     }
+
+
+
 }

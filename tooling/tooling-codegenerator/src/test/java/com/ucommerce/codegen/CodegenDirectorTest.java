@@ -67,6 +67,7 @@ class CodegenDirectorTest {
         Parameter nameParameter = getBarMethod.get().getParameters()[0];
 
         verify(builderSpy).startClass(eq(GoodInterface.class));
+        verify(builderSpy).buildClassSignature(eq(GoodInterface.class));
         verify(builderSpy).startMethodSignature(eq(GoodInterface.class), eq(getBarMethod.get()));
         verify(builderSpy).addParameter(eq(getBarMethod.get()), eq(nameParameter));
         verify(builderSpy).finishMethodBlock(eq(GoodInterface.class), eq(getBarMethod.get()));

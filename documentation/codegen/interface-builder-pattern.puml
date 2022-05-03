@@ -33,6 +33,7 @@ Class SpringRestBuilder
 Class GeneratedFile
 GeneratedFile : -file : File
 GeneratedFile : -content : String
+GeneratedFile : -fileName : String
 GeneratedFile : +writeToFile()
 
 

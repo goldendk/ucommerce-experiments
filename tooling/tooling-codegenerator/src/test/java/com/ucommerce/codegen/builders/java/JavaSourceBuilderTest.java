@@ -26,7 +26,24 @@ class JavaSourceBuilderTest {
         //THEN
         JavaSourceFile javaSourceFile = spy.getGeneratedFiles().get(0);
         assertEquals("package com.ucommerce.testapp;", javaSourceFile.getTargetPackage());
+        assertEquals("FooServiceNOOP.java", javaSourceFile.getFileName());
     }
+
+    @Test
+    public void givenFooService_whenClassSignature_generateClassSignature() {
+
+        //GIVEN
+        Class toBuild = FooService.class;
+
+        //WHEN
+        NOOPJavaSourceBuilder spy = spy(new NOOPJavaSourceBuilder());
+        spy.startClass(toBuild);        spy.finishClass(); // to get result.
+
+        //THEN
+        JavaSourceFile javaSourceFile = spy.getGeneratedFiles().get(0);
+        assertEquals("package com.ucommerce.testapp;", javaSourceFile.getTargetPackage());
+    }
+
 
 
     @Test
@@ -41,8 +58,8 @@ class JavaSourceBuilderTest {
         NOOPJavaSourceBuilder spy = spy(new NOOPJavaSourceBuilder());
         spy.startClass(toBuild);
         spy.startMethodSignature(toBuild, someRandomCommand);
-        spy.startParameters();
-        spy.endParameters();
+        spy.beforeParameters();
+        spy.afterParameters();
         spy.finishMethodBlock(toBuild, someRandomCommand); // to get result.
         spy.finishClass(); // to get result.
 
@@ -67,8 +84,8 @@ class JavaSourceBuilderTest {
         NOOPJavaSourceBuilder spy = spy(new NOOPJavaSourceBuilder());
         spy.startClass(toBuild);
         spy.startMethodSignature(toBuild, someRandomCommand);
-        spy.startParameters();
-        spy.endParameters();
+        spy.beforeParameters();
+        spy.afterParameters();
         spy.finishMethodBlock(toBuild, someRandomCommand); // to get result.
         spy.finishClass(); // to get result.
 
@@ -93,9 +110,9 @@ class JavaSourceBuilderTest {
         NOOPJavaSourceBuilder spy = spy(new NOOPJavaSourceBuilder());
         spy.startClass(toBuild);
         spy.startMethodSignature(toBuild, methodToBuild);
-        spy.startParameters();
+        spy.beforeParameters();
         spy.addParameter(methodToBuild, methodToBuild.getParameters()[0]);
-        spy.endParameters();
+        spy.afterParameters();
         spy.finishMethodBlock(toBuild, methodToBuild); // to get result.
         spy.finishClass(); // to get result.
 
