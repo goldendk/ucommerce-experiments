@@ -14,6 +14,9 @@ repositories {
 
 dependencies {
     implementation("org.ucommerce:shared-kernel:1.0-SNAPSHOT")
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-text
+    implementation("org.apache.commons:commons-text:1.9")
+
 
 }
 

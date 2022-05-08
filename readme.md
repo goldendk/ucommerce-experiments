@@ -1,3 +1,14 @@
+## Purpose
+
+### Java First Design 
+#### An object oriented approach to service architecture.
+To demonstrate a "java first" design for a service driven architecture. Usually the external interfaces in the architecture 
+are defined by Open API Specification files rather than Java. This leads to unnecessary boiler plate code in the client applications 
+consuming the external service. Assuming the clients are Java based. 
+
+This project will demonstrate that the external service might be better implemented in Java (plain Java interface) and the marshalling logic auto-generated from that.
+Note that the bit-stream implementation does not make a difference there. REST layers and message queue producer/consumer can all be generated from the defined Java interface.
+
 ## A diary of sorts
 ### 24-04-2022 - REST layer code generation. 
 Got the custom annotation processor to work with Intellij<->Gradle<->Google auto-service.
@@ -65,3 +76,23 @@ module code should fix the issue.
 
 Ending for today - the results are fine as it is though the building process is cumbersome. Hopefully the efforts will prove off once 
 more interfaces are defined and the amount of code generated is higher.
+
+
+### 8-5-2022 - making rest interfaces
+
+When building the REST interface the interface shold either return the same entities as 
+the @ExternalService exposes or build entirely new ones. 
+
+The best solution I would think is to use the @ExternalService contract as the POJOs are already part of the API definition. 
+The whole point of generating the source code for this is to prevent boiler-plate code. 
+
+After the API defintion is made (@ExternalService) the rest should simply be auto generated from this. 
+If the core service wishes to have other, internal, data-structures these can be added over time and does not need to 
+exist in the first release of the service. 
+
+If the internal model and the external model starts to deviate then those new internal classes 
+can be added slowly and simply mapped to the @ExternalService domain classes.
+
+Java 14 records should be serializable by Spring MVC using Jackson. 
+We might have to use a newer version of jackson than what is default in Spring Boot. 
+

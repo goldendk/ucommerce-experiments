@@ -35,8 +35,7 @@ class DirectMethodProxyBuilderTest {
                 public class FooServiceDirectProxy""", file.getClassSignature().get(0));
 
         assertEquals("""
-                            private FooService delegate;
-                            """, file.getFields().get(0));
+                            private FooService delegate;""", file.getFields().get(0));
     }
 
     @Test
@@ -47,7 +46,7 @@ class DirectMethodProxyBuilderTest {
 
         //WHEN
         builder.startClass(FooService.class);
-        builder.startMethodSignature(FooService.class, getBarMethod);
+        builder.startMethod(FooService.class, getBarMethod);
         builder.beforeParameters();
         builder.addParameter(getBarMethod, nameParameter);
         builder.afterParameters();
@@ -60,7 +59,7 @@ class DirectMethodProxyBuilderTest {
         assertEquals("""
                         public BarRecord getBar(String name){
 
-                            this.delegate.getBar(name);
+                            return this.delegate.getBar(name);
 
                         }""", generatedFiles.get(0).getMethods().get(0));
 

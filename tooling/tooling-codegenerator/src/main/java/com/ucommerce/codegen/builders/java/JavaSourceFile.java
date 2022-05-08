@@ -7,9 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -19,7 +17,7 @@ import java.util.stream.Collectors;
 public class JavaSourceFile extends GeneratedFile {
     private static String SPACES = "                                                                      ";
     private String targetPackage;
-    private List<String> imports = new ArrayList<>();
+    private Set<String> imports = new LinkedHashSet<>();
 
     private List<String> classSignature = new ArrayList<>();
 
@@ -62,9 +60,9 @@ public class JavaSourceFile extends GeneratedFile {
 
     }
 
-    private String fillOutTemplate() {
+    protected String fillOutTemplate() {
 
-        String importSection = this.imports.stream().collect(Collectors.joining("\n"));
+        String importSection = this.imports.stream().map(e->"import " + e + ";").collect(Collectors.joining("\n"));
         String classSignatureSection = this.classSignature.stream().collect(Collectors.joining("\n"));
 
         String fieldsSection = this.fields.stream().map(e -> "    " + e).collect(Collectors.joining("\n\n"));
@@ -87,7 +85,7 @@ public class JavaSourceFile extends GeneratedFile {
         this.targetPackage = targetPackage;
     }
 
-    public List<String> getImports() {
+    public Set<String> getImports() {
         return imports;
     }
 
@@ -122,10 +120,13 @@ public class JavaSourceFile extends GeneratedFile {
 
     private static String JavaClassTemplate = """
             {0}
+            
             {1}
+            
             {2} '{'
                      
             {3}
+            
             {4}
             
             {5}

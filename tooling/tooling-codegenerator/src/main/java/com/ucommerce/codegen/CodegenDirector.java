@@ -40,7 +40,7 @@ public class CodegenDirector {
                 .sorted(Comparator.comparing(Method::getName))
                 .collect(Collectors.toList());
         for (Method method : methods) {
-            builder.startMethodSignature(toConstruct, method);
+            builder.startMethod(toConstruct, method);
             builder.beforeParameters();
             List<Parameter> parameters = Arrays.stream(method.getParameters())
                     .sorted(Comparator.comparing(Parameter::getName))

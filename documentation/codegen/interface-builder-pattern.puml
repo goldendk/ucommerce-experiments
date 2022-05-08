@@ -7,12 +7,12 @@ CodegenDirector : construct()
 
 interface SourceCodeBuilder
 SourceCodeBuilder : +startClass(Class) // can create fields
-SourceCodeBuilder : +startMethodSignature(Class, Method method, Class returnType) //add returnType to code
+SourceCodeBuilder : +startMethodSignature(Class toBuild, Method method, Class returnType) //add returnType to code
 SourceCodeBuilder : +startParameters()
-SourceCodeBuilder : +addParameter(Class, Method method, Class paramType) // add paramType to code
+SourceCodeBuilder : +addParameter(Class toBuild, Method method, Class paramType) // add paramType to code
 SourceCodeBuilder : +endParameters()
-SourceCodeBuilder : +buildMethodBody(Class, Method method)
-SourceCodeBuilder : +finishMethodBlock(Class, Method method)
+SourceCodeBuilder : +buildMethodBody(Class toBuild, Method method)
+SourceCodeBuilder : +finishMethodBlock(Class toBuild, Method method)
 SourceCodeBuilder : +finishClass()
 
 
@@ -21,6 +21,7 @@ abstract class JavaSourceBuilder
 note left: Contains shared functions for all \n Java code builders.
 JavaSourceBuilder : resolveVisibility(Method m) : String
 JavaSourceBuilder : resolveReturnType(String m) : String // can make new files
+JavaSourceBuilder : resolveClassAnnotations(Class toBuild)
 JavaSourceBuilder : resolveMethodName(Method m) : String
 JavaSourceBuilder : resolveParameterAnnotations(Method m, Parameter p) : String[]
 JavaSourceBuilder : resolveMethodAnnotations(Method m) : String[]

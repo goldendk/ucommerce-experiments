@@ -51,6 +51,8 @@ class JavaSourceFileTest {
     private static String FOO_SERVICE_RESULT = """
 package com.ucommerce.testapp;
 
+
+
 public class FooServiceDirectProxy {
 
     private FooService delegate;
@@ -61,19 +63,19 @@ public class FooServiceDirectProxy {
 
     public BarRecord getBar(BarQuery query){
 
-        this.delegate.getBar(query);
+        return this.delegate.getBar(query);
 
     }
 
     public BarRecord getBar(String name){
 
-        this.delegate.getBar(name);
+        return this.delegate.getBar(name);
 
     }
 
     public BarRecord someOtherCommand(){
 
-        this.delegate.someOtherCommand();
+        return this.delegate.someOtherCommand();
 
     }
 

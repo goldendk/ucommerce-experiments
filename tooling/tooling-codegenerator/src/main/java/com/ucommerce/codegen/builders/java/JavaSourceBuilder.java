@@ -1,12 +1,17 @@
 package com.ucommerce.codegen.builders.java;
 
 import com.ucommerce.codegen.SourceCodeBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Builder class for Java source files. See subclasses for specific target file types.
@@ -27,6 +32,25 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
         currentFile.setTargetPackage("package " + resolvePackage(toConstruct) + END);
     }
 
+    @Override
+    public void buildClassSignature(Class toConstruct) {
+        List<String> classAnnotations = resolveClassAnnotations(toConstruct);
+        currentFile.getClassSignature().addAll(classAnnotations);
+
+        String signature =  "public class " + resolveClassName(toConstruct);
+        currentFile.getClassSignature().add(signature);
+    }
+
+    /**
+     * Resolves the class level annotations which are added to the class signature.
+     *
+     * @param toConstruct
+     * @return
+     */
+    protected List<String> resolveClassAnnotations(Class toConstruct) {
+        return Collections.emptyList();
+    }
+
     public void finishClass() {
         generatedFiles.add(currentFile);
         currentFile = null;
@@ -38,6 +62,12 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
             methodBuilder.append("," + NEW_LINE);
         }
         paramCount++;
+        List<String> annotations = resolveParameterAnnotations(method, parameter);
+        String annotationString = annotations.stream().collect(Collectors.joining(" "));
+        if (!StringUtils.isBlank(annotationString)) {
+            annotationString += SPACE;
+        }
+        methodBuilder.append(annotationString);
         methodBuilder.append(this.resolveParameterTypeAndName(method, parameter));
     }
 
@@ -52,10 +82,25 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
         paramCount = 0;
     }
 
-    public abstract void buildMethodBody(Class toConstruct, Method method);
+    public void buildMethodBody(Class toConstruct, Method method) {
+        String arguments = Arrays.stream(method.getParameters()).map(e -> e.getName()).collect(Collectors.joining(", "));
 
-    public void startMethodSignature(Class toConstruct, Method method) {
+        // somehow the getReturnType().equals(Void.class) is false when return type is void
+        boolean shouldReturn = !method.getReturnType().getName().equals("void");
+
+        methodBuilder.append(NEW_LINE);
+        methodBuilder.append(indent(1) + (shouldReturn ? "return " : "") + "this.delegate." + resolveMethodName(method) + "(" + arguments + ")" + END);
+        methodBuilder.append(NEW_LINE);
+    }
+
+    public void startMethod(Class toConstruct, Method method) {
         methodBuilder = new StringBuilder();
+        List<String> annotations = resolveMethodAnnotations(method);
+
+        for (String annotation : annotations) {
+            methodBuilder.append(annotation + NEW_LINE);
+        }
+
         String visibility = resolveVisibility(method);
         String returnType = resolveReturnType(method);
         String methodName = resolveMethodName(method);
@@ -69,8 +114,27 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
     }
 
 
+    /**
+     * Resolve the annotations for the given method. Each annotation should be on a separate entry in the returned list.
+     *
+     * @param method the method to generate annotations for.
+     * @return list of strings, each a valid, compiling annotation.
+     */
+    protected List<String> resolveMethodAnnotations(Method method) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Resolves the annoations for the provided method and parameter.
+     *
+     * @return
+     */
+    protected List<String> resolveParameterAnnotations(Method method, Parameter parameter) {
+        return Collections.emptyList();
+    }
+
     public void finishMethodBlock(Class toConstruct, Method method) {
-        methodBuilder.append( NEW_LINE +"}");
+        methodBuilder.append(NEW_LINE + "}");
         currentFile.getMethods().add(methodBuilder.toString());
         methodBuilder = null;
     }
@@ -89,15 +153,31 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
         return result;
     }
 
+    @Override
+    public void buildConstructors(Class toConstruct) {
+        String className = resolveClassName(toConstruct);
+        String paramType = toConstruct.getSimpleName();
+        if (!resolvePackage(toConstruct).equals(toConstruct.getPackageName())) {
+            currentFile.getImports().add(resolvePackage(toConstruct));
+        }
+        String paramName = "delegate";
+        String constructor = MessageFormat.format("""
+                public {0} ({1} {2}) '{'
+                    this.delegate = {2};
+                '}'""", className, paramType, paramName);
+        currentFile.getConstructors().add(constructor);
+    }
+
 
     /**
      * Return 4x&lt;space&gt; characters. Used for indenting a source file.
+     *
      * @param count
      * @return
      */
     protected String indent(int count) {
         String result = "";
-        for(int i = 0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             result += "    ";
         }
         return result;
@@ -106,6 +186,7 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
 
     /**
      * Resolves the <strong>target</strong> class name. The interface being generated from is provided as argument.
+     *
      * @param toConstruct the interface to construct code from.
      * @return the name of the generated class.
      */
@@ -131,7 +212,6 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
     public List<JavaSourceFile> getGeneratedFiles() {
         return generatedFiles;
     }
-
 
 
 }
