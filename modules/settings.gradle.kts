@@ -1,6 +1,7 @@
 includeBuild("inventory/inventory-api")
 includeBuild("../libraries")
+includeBuild("../tooling")
 
-include("modules:inventory:inventory-core")
-include("modules:inventory:inventory-rest")
-include("modules:test-app")
+include("inventory:inventory-core")
+include("inventory:inventory-rest")
+include("test-app")

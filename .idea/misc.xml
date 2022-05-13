@@ -3,5 +3,15 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/dual-service-impl" />
+    <file type="web" url="file://$PROJECT_DIR$/libraries" />
+    <file type="web" url="file://$PROJECT_DIR$/modules" />
+    <file type="web" url="file://$PROJECT_DIR$/shared-kernel" />
+    <file type="web" url="file://$PROJECT_DIR$/tooling" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="openjdk-17" project-jdk-type="JavaSDK" />
+  <component name="SwUserDefinedSpecifications">
+    <option name="specTypeByUrl">
+      <map />
+    </option>
   </component>
 </project>

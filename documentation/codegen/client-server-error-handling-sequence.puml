@@ -1,0 +1,44 @@
+@startuml
+
+title
+ RPC invocation by client app to remote service with thrown exception.
+ The server side exception <u>must</u> be serializable in order to propagate to the client application.
+
+end title
+
+participant ca as "Client App"
+participant csp as "Service Proxy"
+participant clexp as "Exception: RemoteException"
+participant crc as "REST client"
+participant httplib as "HTTP library"
+
+participant httpserver as "REST framework"
+participant sc as "Service Rest\n Controller"
+participant seh as "Service Exception\n handler"
+participant sexp as "Exception: RemoteException"
+participant si as "Service \n implementation"
+
+ca->csp : someCommand(argument)
+csp->crc : marshall arguments
+crc->crc: build HTTP request
+crc->httplib : execute(httpRequest)
+httpserver->httpserver: unmarshal(httpRequest)
+httpserver->sc : someCommand(argument)
+sc->si: someCommand(argument)
+si->si: do command\n logic
+si-> sexp ** : instantiate(type, dataMap)
+
+si-->seh : throws exception
+seh->seh : serializeStackTrace(exception)
+seh->seh : mapToErrorObject(stacktrace, type, dataMap)
+seh-->httpserver : responseObject
+
+httpserver->httpserver : marshalResponse(responseObject)
+httpserver-->httplib : httpResponse
+httplib-->crc : httpResponse
+crc->crc : unmarshal(httpResponse)
+crc->crc : formatExceptionMessage(stacktrace)
+crc->clexp ** : instantiate(message, type, dataMap)
+crc-->ca : throws exception
+ca->ca : catch exception
+@enduml

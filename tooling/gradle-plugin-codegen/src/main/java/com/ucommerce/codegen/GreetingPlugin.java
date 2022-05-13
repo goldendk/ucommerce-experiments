@@ -5,6 +5,7 @@ import com.ucommerce.codegen.builders.java.SpringRestControllerBuilder;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.RegularFileProperty;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
@@ -17,7 +18,7 @@ import java.io.File;
 import java.util.List;
 
 abstract public class GreetingPlugin implements Plugin<Project> {
-    private org.slf4j.Logger logger = LoggerFactory.getLogger(GreetingPlugin.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(GreetingPlugin.class);
     private static final String generatedSourceRootDir = "generated/sources/ucommerce";
 
     @Input
@@ -32,17 +33,7 @@ abstract public class GreetingPlugin implements Plugin<Project> {
         target.getExtensions().create("restController", RestControllerExtension.class);
         target.getPluginManager().apply(JavaPlugin.class);
 
-        Configuration dataFiles = target.getConfigurations().create("ucommerceCodeGen", c -> {
-            c.setVisible(false);
-            c.setCanBeConsumed(false);
-            c.setCanBeResolved(true);
-            c.setDescription("The data artifacts to be processed for this plugin.");
-        });
-        createSourceSets2(target, null);
-
-
-        target.getTasks().withType(SimpleTask.class).configureEach(
-                dataProcessing -> dataProcessing.getDataFiles().from(dataFiles));
+        prepareGeneratedJavaSourceFolder(target);
 
         target.beforeEvaluate((project) -> {
             final Logger logger = project.getLogger();
@@ -54,10 +45,9 @@ abstract public class GreetingPlugin implements Plugin<Project> {
             final Logger logger = project.getLogger();
             logger.info("after configurations: " + project.getConfigurations().getNames());
             RestControllerExtension restControllerExtension = (RestControllerExtension) project.getExtensions().getByName("restController");
-            logger.info("Starting code generation with settings " + restControllerExtension.toString());
 
             if (restControllerExtension != null) {
-                attemptToGenerateCode(restControllerExtension);
+       //         attemptToGenerateCode(restControllerExtension, restControllerExtension.getGeneratedFileDir());
             } else {
                 logger.info("Not generating any RestController right now.");
             }
@@ -70,10 +60,27 @@ abstract public class GreetingPlugin implements Plugin<Project> {
         });
     }
 
-    private void attemptToGenerateCode(RestControllerExtension restControllerExtension) {
+    /**
+     * Creates a new configuration where dependencies can be added to. Not necessary currently since the buildScript-&gt;dependencies (classpath)
+     * can add code dynamically to the plugins.
+     * @param target
+     */
+    private void createNewConfigurationForDependencies(Project target) {
+        //FIXME: Remove this if we don't use the ucommerceCodeGen configuration in consumer build files.
+        Configuration dataFiles = target.getConfigurations().create("ucommerceCodeGen", c -> {
+            c.setVisible(false);
+            c.setCanBeConsumed(false);
+            c.setCanBeResolved(true);
+            c.setDescription("The data artifacts to be processed for this plugin.");
+        });
+    }
+
+    public static void attemptToGenerateCode(RestControllerExtension restControllerExtension, File generatedFileDir) {
         if (restControllerExtension.getTargetInterface() == null) {
+            System.out.println("Target interface is null, returning...");
             return;
         }
+        System.out.println("Target interface is : " + restControllerExtension.getTargetInterface());
         SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
         CodegenDirector director = new CodegenDirector(builder);
         Class cl = null;
@@ -86,21 +93,32 @@ abstract public class GreetingPlugin implements Plugin<Project> {
         director.construct(cl);
         List<JavaSourceFile> generatedFiles = builder.getGeneratedFiles();
         for (JavaSourceFile file : generatedFiles) {
-            file.writeToFile(restControllerExtension.getGeneratedFileDir().get().getAsFile().toPath());
+            System.out.println(file.fillOutTemplate());
+            file.writeToFile(generatedFileDir.toPath());
         }
     }
 
 
-    public static void createSourceSets2(Project project, File outputDirectory) {
-        File rootGeneratedDir = new File(project.getBuildDir(), generatedSourceRootDir);
-        rootGeneratedDir.mkdirs();
-        File generatedDir = new File(rootGeneratedDir, "src/main/java");
-        generatedDir.mkdirs();
+    public static void prepareGeneratedJavaSourceFolder(Project project) {
+        File generatedJavaDir = resolveRootGeneratedJavaFileDirectory(project);
+        generatedJavaDir.mkdirs();
         final SourceSet main = project
                 .getConvention()
                 .getPlugin(JavaPluginConvention.class)
                 .getSourceSets()
                 .getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-        main.getJava().srcDir(generatedDir.getAbsolutePath());
+        main.getJava().srcDir(generatedJavaDir.getAbsolutePath());
+    }
+
+    /**
+     * Returns the root of the generated file folder. Basically this is the "src/main/java" folder where classes can be
+     * outputted.
+     * @return
+     */
+    public static File resolveRootGeneratedJavaFileDirectory(Project project){
+        File rootGeneratedDir = new File(project.getBuildDir(), generatedSourceRootDir);
+        rootGeneratedDir.mkdirs();
+        File generatedJavaDir = new File(rootGeneratedDir, "src/main/java");
+        return generatedJavaDir;
     }
 }

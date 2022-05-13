@@ -70,7 +70,7 @@ code generators.
 - annotation for methods can vary.
 - Parameters might need annotations.
 
-There was an issue with getting the correct parameter names in the generated code. Adding -paramters to the JVM compiling the 
+There was an issue with getting the correct parameter names in the generated code. Adding -parameters to the JVM compiling the 
 module code should fix the issue.
 >https://stackoverflow.com/questions/21455403/how-to-get-method-parameter-names-in-java-8-using-reflection/21455958#21455958
 
@@ -101,8 +101,45 @@ We might have to use a newer version of jackson than what is default in Spring B
 
 > Documentation: https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#providing_default_dependencies_for_plugins
 
+Note: it was not. Deploying stuff to maven local is not needed in a mono-repo model as we have now. 
+
+The composite project model works fine with gradle, which will resolve the includBuild dependencies just fine.
+
 Ending for today.
 
+### 13-05-2022 (Weekend of...) Spring rest clean up and error handling. 
+The build issues were solved by going completely with composite builds. The root folder no longer is a gradle project.
 
-### publish to maven local 
-> https://github.com/gradle/kotlin-dsl-samples/blob/master/samples/maven-publish/build.gradle.kts
+The generation of sources is solved by (finally) typing in the correct classname. The build script class path configuration worked
+almost from the beginning, but there was a typo in  the inventory-rest build.gradle.kts file for the "restController" extension argument. 
+
+Next up: Error handling on both service and client side when using http.
+
+A few points:
+- Code generator does not check rules for method naming or overlapping HTTP verbs and endpoints. This should be added at some point.
+- Service module names should be in the generated rest output for both client and rest controller.
+
+
+#### Error handling
+To support automatic error handling some key features must be supported. 
+
+- Code generator must detect which RemoteExceptions thrown by the RemoteService that is being code-generated and...
+  - Generate marshall/unmarshall logic for each. 
+  - Alternatively RemoteException must have a shared super class that dictates the instantiation.
+- A Remote exception must be serializable in a general fashion. 
+  - errorType : String
+  - dataMap : Map<String, ? extends Serializable>
+  - stackTrace : List<String> - Array of strings from the original exception. This should be formatted by the client.
+- Serializing the RemoteException must contain the server-side stacktrace as part of the exception message.
+- The client side REST proxy must unmarshall the RemoteException and throw it with all serialized data and with the same type.
+
+
+An MVP implementation of this will contain the following source files:
+(Not! generated!)
+- RemoteException super class - defines shared constructor which all other exceptions must follow.
+- RestControllerExceptionHandler (@ControllerAdvice) class to serialize RemoteException to the http stream. See : https://www.baeldung.com/exception-handling-for-rest-with-spring
+- RestClientExceptionHandler which will unmarshal the exception and re-throw it on the client side.
+
+Generated
+- RestClientServiceProxy - client proxy marshalling java commands to http. 
+- RestControllerServiceProxy - Spring rest controller unmarshalling http response to java service method calls.

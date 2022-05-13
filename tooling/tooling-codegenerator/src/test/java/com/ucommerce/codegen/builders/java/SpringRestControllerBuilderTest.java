@@ -56,7 +56,7 @@ class SpringRestControllerBuilderTest {
                 }""", methodSource);
 
         assertEquals(
-                "import org.springframework.web.bind.annotation.GetMapping;",
+                "org.springframework.web.bind.annotation.GetMapping",
                 sourceFile.getImports().iterator().next());
     }
 
@@ -242,11 +242,15 @@ class SpringRestControllerBuilderTest {
         assertEquals("""     
                 package com.ucommerce.testapp.rest;
                                 
-                import com.ucommerce.testapp.rest;
-                import import org.springframework.web.bind.annotation.PostMapping;;
-                import import org.springframework.web.bind.annotation.GetMapping;;
+                                
+                import org.springframework.web.bind.annotation.RequestMapping;
+                import org.springframework.web.bind.annotation.RestController;
+                import org.springframework.web.bind.annotation.PostMapping;
+                import org.springframework.web.bind.annotation.GetMapping;
                 import org.springframework.web.bind.annotation.RequestParam;
                                 
+                @RestController
+                @RequestMapping("/ucommerce/api/inventory/atp-service")
                 public class FooServiceRestController {
                                 
                     private FooService delegate;

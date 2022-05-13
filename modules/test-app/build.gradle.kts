@@ -13,9 +13,9 @@ repositories {
 }
 
 dependencies {
-   // annotationProcessor(project(":libraries:annotation-processor"))
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation(project(":inventory:inventory-rest"))
     testImplementation("org.springframework.boot:spring-boot-devtools")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }

@@ -34,12 +34,6 @@ public class SpringRestControllerBuilder extends JavaSourceBuilder {
     }
 
     @Override
-    public void buildClassSignature(Class toConstruct) {
-        //TODO: This might have to have the package name to avoid conflicts (ie. 'SecurityService').
-        currentFile.getClassSignature().add("public class " + resolveClassName(toConstruct));
-    }
-
-    @Override
     protected List<String> resolveClassAnnotations(Class toConstruct) {
 
         currentFile.getImports().add("org.springframework.web.bind.annotation.RequestMapping");
@@ -73,7 +67,7 @@ public class SpringRestControllerBuilder extends JavaSourceBuilder {
         String mappingClassName = mappingPrefix + "Mapping";
         String mappingAnnotation = "@" + mappingClassName + "(\"/" + urlName + "\")";
 
-        currentFile.getImports().add("import org.springframework.web.bind.annotation." + mappingClassName + ";");
+        currentFile.getImports().add("org.springframework.web.bind.annotation." + mappingClassName);
 
         return List.of(mappingAnnotation);
     }
