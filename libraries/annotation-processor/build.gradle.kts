@@ -1,9 +1,10 @@
 plugins {
-    id ("java" )
+    id ("java-library" )
+    id ("maven-publish")
 }
 
-group "org.ucommerce"
-version "1.0-SNAPSHOT"
+group = "org.ucommerce"
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -24,3 +25,30 @@ dependencies {
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
+
+val sourcesJar by tasks.registering(Jar::class) {
+    classifier = "sources"
+    group = "org.ucommerce"
+    version = "1.0-SNAPSHOT"
+    from(sourceSets.main.get().allSource)
+}
+
+
+publishing {
+    repositories {
+        maven {
+            // change to point to your repo, e.g. http://my.org/repo
+            mavenLocal()
+        }
+    }
+    publications {
+        register("mavenJava", MavenPublication::class) {
+            version = project.property("version").toString()
+            groupId = project.property("group").toString()
+            from(components["java"])
+        }
+    }
+}
+//tasks.named("compileJava") { finalizedBy("jar") }
+//tasks.named("build") { finalizedBy("jar") }
+//tasks.named("jar") { finalizedBy("publishToMavenLocal") }

@@ -2,15 +2,24 @@ package com.ucommerce.codegen;
 
 import kotlin.Suppress;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.ConfigurableFileCollection;
+import org.gradle.api.tasks.InputFiles;
 import org.gradle.api.tasks.TaskAction;
 
-public class SimpleTask extends DefaultTask {
+public abstract class SimpleTask extends DefaultTask {
+
+
+    @InputFiles
+    abstract public ConfigurableFileCollection getDataFiles();
 
     @Suppress(names = {"unused"})
     @TaskAction
     public void doWork() {
 
-    //    GreetingPlugin.createSourceDir(getProject());
+
+        System.out.println(getDataFiles().getFiles());
+
+        //getDataFiles()
 
     }
 

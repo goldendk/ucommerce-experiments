@@ -96,3 +96,13 @@ can be added slowly and simply mapped to the @ExternalService domain classes.
 Java 14 records should be serializable by Spring MVC using Jackson. 
 We might have to use a newer version of jackson than what is default in Spring Boot. 
 
+> Executing the plugin in the inventory-rest is causing some problems. The inventory-api module is not available at 
+> plugin execution time. Defining a custom Gradle 'configuration' seems to be the solution. 
+
+> Documentation: https://docs.gradle.org/current/userguide/implementing_gradle_plugins.html#providing_default_dependencies_for_plugins
+
+Ending for today.
+
+
+### publish to maven local 
+> https://github.com/gradle/kotlin-dsl-samples/blob/master/samples/maven-publish/build.gradle.kts
