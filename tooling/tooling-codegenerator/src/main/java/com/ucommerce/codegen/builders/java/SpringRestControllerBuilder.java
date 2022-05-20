@@ -1,11 +1,9 @@
 package com.ucommerce.codegen.builders.java;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.CaseUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +20,13 @@ import java.util.List;
  */
 public class SpringRestControllerBuilder extends JavaSourceBuilder {
 
+
+    private final String moduleName;
+
+    public SpringRestControllerBuilder(String moduleName) {
+        this.moduleName = moduleName;
+    }
+
     @Override
     protected String resolvePackage(Class toConstruct) {
         return super.resolvePackage(toConstruct) + ".rest"; //convention for now.
@@ -34,13 +39,17 @@ public class SpringRestControllerBuilder extends JavaSourceBuilder {
     }
 
     @Override
+    public List<String> resolveImplements(Class toConstruct) {
+        return Collections.emptyList();
+    }
+
+    @Override
     protected List<String> resolveClassAnnotations(Class toConstruct) {
 
         currentFile.getImports().add("org.springframework.web.bind.annotation.RequestMapping");
         currentFile.getImports().add("org.springframework.web.bind.annotation.RestController");
-        String serviceRestName = MethodHelper.convertServiceNameToRestName(toConstruct.getSimpleName());
-
-        return List.of("@RestController", "@RequestMapping(\"/ucommerce/api/" + serviceRestName + "\")");
+        String servicePath = HttpBuilderHelper.buildServiceHttpPath(moduleName, toConstruct);
+        return List.of("@RestController", "@RequestMapping(\"" + servicePath + "\")");
     }
 
     @Override
@@ -59,45 +68,19 @@ public class SpringRestControllerBuilder extends JavaSourceBuilder {
 
     @Override
     protected List<String> resolveMethodAnnotations(Method method) {
-        String verb = resolveHttpVerb(method);
+        String verb = HttpBuilderHelper.resolveHttpVerb(method);
 
-        String urlName = MethodHelper.convertMethodNameToUrlName(method.getName());
+        String rpcPath = HttpBuilderHelper.convertMethodNameToUrlPath(method.getName());
 
         String mappingPrefix = CaseUtils.toCamelCase(verb, true);
         String mappingClassName = mappingPrefix + "Mapping";
-        String mappingAnnotation = "@" + mappingClassName + "(\"/" + urlName + "\")";
+        String mappingAnnotation = "@" + mappingClassName + "(\"" + rpcPath + "\")";
 
         currentFile.getImports().add("org.springframework.web.bind.annotation." + mappingClassName);
 
         return List.of(mappingAnnotation);
     }
 
-    private String resolveHttpVerb(Method method) {
-        String name = method.getName();
-        String verb;
-        if (StringUtils.startsWithIgnoreCase(name, "get") ||
-                StringUtils.startsWithIgnoreCase(name, "load") ||
-                StringUtils.startsWithIgnoreCase(name, "fetch")) {
-            if (MethodHelper.hasComplexParameters(method) || MethodHelper.hasVoidReturnType(method)) {
-                verb = "POST";
-            } else {
-                verb = "GET";
-            }
-        } else if (StringUtils.startsWithIgnoreCase(name, "create")) {
-            verb = "POST";
-        } else if (StringUtils.startsWithIgnoreCase(name, "update")) {
-            verb = "PUT";
-        } else if (StringUtils.startsWithIgnoreCase(name, "delete")) {
-            verb = "DELETE";
-        } else {
-            if (MethodHelper.hasComplexParameters(method) || MethodHelper.hasVoidReturnType(method)) {
-                verb = "POST";
-            } else {
-                verb = "GET";
-            }
-        }
-        return verb;
-    }
 
     @Override
     protected String resolveClassName(Class toConstruct) {

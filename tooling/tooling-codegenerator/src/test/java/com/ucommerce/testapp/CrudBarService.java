@@ -1,8 +1,11 @@
 package com.ucommerce.testapp;
 
+import org.ucommerce.shared.kernel.services.ExternalService;
+
 /**
  * To test generating crud methods in http.
  */
+@ExternalService
 public interface CrudBarService {
 
     BarRecord getBar(String name); //GET request here due to simple type.

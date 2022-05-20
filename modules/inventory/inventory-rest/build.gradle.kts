@@ -1,3 +1,5 @@
+import com.ucommerce.codegen.Bar
+
 buildscript {
     repositories {
         mavenCentral()
@@ -17,6 +19,12 @@ plugins {
 
 restController {
     targetInterface = "org.ucommerce.modules.inventory.services.AtpService"
+    //foos = null;
+  //FIXME: make the extension class in rest controller generator take a list of configs, each with a module name, target package and java @ExternalService interface
+    bars = listOf(
+        Bar("someValue"),
+        Bar("otherValue")
+    )
 }
 
 

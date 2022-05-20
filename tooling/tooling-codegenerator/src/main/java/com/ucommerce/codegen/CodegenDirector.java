@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
  * This CodegenDirector is meant to build different outputs for interfaces with @ExternalService annotation.
  */
 public class CodegenDirector {
-    private final JavaSourceBuilder builder;
+    private final SourceCodeBuilder builder;
 
-    public CodegenDirector(JavaSourceBuilder builder) {
+    public CodegenDirector(SourceCodeBuilder builder) {
         this.builder = builder;
     }
 

@@ -32,7 +32,7 @@ class DirectMethodProxyBuilderTest {
         JavaSourceFile file = generatedFiles.get(0);
 
         assertEquals("""
-                public class FooServiceDirectProxy""", file.getClassSignature().get(0));
+                public class FooServiceDirectProxy implements FooService""", file.getClassSignature().get(0));
 
         assertEquals("""
                             private FooService delegate;""", file.getFields().get(0));
@@ -57,6 +57,7 @@ class DirectMethodProxyBuilderTest {
         //THEN
         List<JavaSourceFile> generatedFiles = builder.getGeneratedFiles();
         assertEquals("""
+                        @Override
                         public BarRecord getBar(String name){
 
                             return this.delegate.getBar(name);

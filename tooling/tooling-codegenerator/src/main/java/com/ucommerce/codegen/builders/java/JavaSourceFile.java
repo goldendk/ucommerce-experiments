@@ -62,7 +62,7 @@ public class JavaSourceFile extends GeneratedFile {
 
     public String fillOutTemplate() {
 
-        String importSection = this.imports.stream().map(e->"import " + e + ";").collect(Collectors.joining("\n"));
+        String importSection = this.imports.stream().sorted().map(e->"import " + e + ";").collect(Collectors.joining("\n"));
         String classSignatureSection = this.classSignature.stream().collect(Collectors.joining("\n"));
 
         String fieldsSection = this.fields.stream().map(e -> "    " + e).collect(Collectors.joining("\n\n"));

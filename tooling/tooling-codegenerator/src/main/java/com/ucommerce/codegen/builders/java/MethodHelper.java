@@ -70,20 +70,6 @@ public class MethodHelper {
     }
 
     /**
-     * Find the words in mixed case string like ThisIsText or HereIsSomeText
-     *
-     * @param simpleName
-     * @return the list of words to process
-     */
-    public static String convertServiceNameToRestName(String simpleName) {
-
-        List<String> words = findWordsInMixedCase(simpleName);
-
-        String serviceRestName = words.stream().map(String::toLowerCase).collect(Collectors.joining("-"));
-        return serviceRestName;
-    }
-
-    /**
      * Source : https://github.com/eugenp/tutorials/blob/master/core-java-modules/core-java-regex-2/src/main/java/com/baeldung/regex/camelcasetowords/CamelCaseToWords.java
      * Find the words in mixed case string like ThisIsText or HereIsSomeText
      *
@@ -99,15 +85,5 @@ public class MethodHelper {
         return words;
     }
 
-    /**
-     * Converts a Java method naming scheme into a http URL based one. E.g. "getBar" --&gt; "get-bar".
-     *
-     * @param name
-     * @return
-     */
-    public static String convertMethodNameToUrlName(String name) {
-        List<String> wordsInMixedCase = findWordsInMixedCase(name);
-        String urlName = wordsInMixedCase.stream().map(StringUtils::lowerCase).collect(Collectors.joining("-"));
-        return urlName;
-    }
+
 }
