@@ -1,20 +1,18 @@
 package com.ucommerce.codegen.builders.java;
 
 import com.ucommerce.codegen.CodegenDirector;
-import com.ucommerce.testapp.BarQuery;
 import com.ucommerce.testapp.BarRecord;
 import com.ucommerce.testapp.CrudBarService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
-import java.net.http.HttpRequest;
-import java.time.Duration;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-publx1ic class RpcClientBuilderTest {
+public class RpcClientBuilderTest {
 
     RpcClientBuilder builder;
     private final static Class toBuild = CrudBarService.class;
@@ -76,39 +74,102 @@ publx1ic class RpcClientBuilderTest {
         builder.methodBuilder.setLength(0); // just want the method body
         builder.buildMethodBody(toBuild, method);
 
-        assertEquals("""
+        assertEquals(SourceBuilderUtil.addIndentation("""
+                                        
+                        URIBuilder builder = new URIBuilder()
+                                .schemeAndHost(schemeHostAndPort)
+                                .appendPath("/ucommerce/api/test/crud-bar-service/get-bar");
+                            
+                        if (StringUtils.isNotBlank(name)) {
+                            builder.appendQuery("name", name);
+                        }
+                            
+                        HttpRequest request = HttpRequest.newBuilder()
+                                .GET()
+                                .uri(builder.uri())
+                                //FIXME: configurable timeouts.
+                                .timeout(Duration.ofSeconds(10L))
+                                .build();
+                                
+                        return serviceRpcClient.execute(request, BarRecord.class);""", 4),
+                builder.methodBuilder.toString());
+    }
+
+    @Test
+    public void givenComplexCreateBar_whenBuildingMethodBody_shouldBuildCorrectBody() throws NoSuchMethodException {
+
+
+        Method method = toBuild.getMethod("createBar", BarRecord.class);
+
+        builder.startClass(toBuild);
+        builder.startMethod(toBuild, method);
+        builder.methodBuilder.setLength(0); // just want the method body
+        builder.buildMethodBody(toBuild, method);
+
+
+        assertEquals(SourceBuilderUtil.addIndentation("""
+                 
                     URIBuilder builder = new URIBuilder()
                             .schemeAndHost(schemeHostAndPort)
-                            .appendPath("/ucommerce/api/test/crud-bar-service/get-bar");
-                        
-                    if (StringUtils.isNotBlank(name)) {
-                        builder.appendQuery("name", name);
-                    }
+                            .appendPath("/ucommerce/api/test/crud-bar-service/create-bar");
                         
                     HttpRequest request = HttpRequest.newBuilder()
-                            .GET()
+                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
                             .timeout(Duration.ofSeconds(10L))
-                            .build();""", builder.methodBuilder.toString());
+                            .build();
+                        
+                    return serviceRpcClient.execute(request, String.class);""", 4),
+                builder.methodBuilder.toString());
     }
 
+    @Test
+    public void givenDeleteBar_whenBuildingMethodBody_shouldBuildCorrectly() throws NoSuchMethodException {
+
+        Method method = toBuild.getMethod("deleteBar", String.class);
+
+        builder.startClass(toBuild);
+        builder.startMethod(toBuild, method);
+        builder.methodBuilder.setLength(0); // just want the method body
+        builder.buildMethodBody(toBuild, method);
+
+        assertEquals("""
+                                                
+                        \s\s\s\sURIBuilder builder = new URIBuilder()
+                                    .schemeAndHost(schemeHostAndPort)
+                                    .appendPath("/ucommerce/api/test/crud-bar-service/delete-bar");
+                             
+                            if (StringUtils.isNotBlank(name)) {
+                                builder.appendQuery("name", name);
+                            }
+                             
+                            HttpRequest request = HttpRequest.newBuilder()
+                                    .DELETE()
+                                    .uri(builder.uri())
+                                    //FIXME: configurable timeouts.
+                                    .timeout(Duration.ofSeconds(10L))
+                                    .build();
+                             
+                            return serviceRpcClient.execute(request, null);""",
+                builder.methodBuilder.toString());
+    }
 
     String clientSource = """
-            package com.ucommerce.testapp;
+            package com.ucommerce.testapp.rpc;
                         
             import com.ucommerce.testapp.BarQuery;
             import com.ucommerce.testapp.BarRecord;
             import com.ucommerce.testapp.CrudBarService;
-            import org.apache.commons.lang3.StringUtils;
-            import org.ucommerce.shared.rest.client.ServiceRpcClient;
-                        
             import java.net.http.HttpRequest;
             import java.time.Duration;
+            import org.apache.commons.lang3.StringUtils;
+            import org.ucommerce.shared.rest.client.ServiceRpcClient;
                         
             public class CrudBarServiceRpcClient implements CrudBarService {
                         
                 private ServiceRpcClient serviceRpcClient = new ServiceRpcClient();
+                
                 private final String schemeHostAndPort;
                         
                 public CrudBarServiceRpcClient(String schemeHostAndPort) {
@@ -116,6 +177,44 @@ publx1ic class RpcClientBuilderTest {
                     serviceRpcClient.initialize();
                     this.schemeHostAndPort = schemeHostAndPort;
                         
+                }
+
+                @Override
+                public String createBar(BarRecord record) {
+                
+                    URIBuilder builder = new URIBuilder()
+                            .schemeAndHost(schemeHostAndPort)
+                            .appendPath("/ucommerce/api/test/crud-bar-service/create-bar");
+                        
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
+                            .uri(builder.uri())
+                            //FIXME: configurable timeouts.
+                            .timeout(Duration.ofSeconds(10L))
+                            .build();
+                        
+                    return serviceRpcClient.execute(request, String.class);
+                }
+                
+                @Override
+                public void deleteBar(String name) {
+                
+                    URIBuilder builder = new URIBuilder()
+                            .schemeAndHost(schemeHostAndPort)
+                            .appendPath("/ucommerce/api/test/crud-bar-service/delete-bar");
+                        
+                    if (StringUtils.isNotBlank(name)) {
+                        builder.appendQuery("name", name);
+                    }
+                        
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .DELETE()
+                            .uri(builder.uri())
+                            //FIXME: configurable timeouts.
+                            .timeout(Duration.ofSeconds(10L))
+                            .build();
+                        
+                    return serviceRpcClient.execute(request, null);
                 }
                         
                 @Override
@@ -143,7 +242,7 @@ publx1ic class RpcClientBuilderTest {
                 public BarRecord getBar(BarQuery query) {
                         
                     URIBuilder builder = new URIBuilder()
-                            .hostAndScheme(schemeHostAndPort)
+                            .schemeAndHost(schemeHostAndPort)
                             .appendPath("/ucommerce/api/test/crud-bar-service/get-bar");
                         
                     HttpRequest request = HttpRequest.newBuilder()
@@ -155,47 +254,12 @@ publx1ic class RpcClientBuilderTest {
                         
                     return serviceRpcClient.execute(request, BarRecord.class);
                 }
-                        
-                @Override
-                public void deleteBar(String name) {
-                    URIBuilder builder = new URIBuilder()
-                            .hostAndScheme(schemeHostAndPort)
-                            .appendPath("/ucommerce/api/test/crud-bar-service/delete-bar");
-                        
-                    if (StringUtils.isNotBlank(name)) {
-                        builder.appendQuery("name", name);
-                    }
-                        
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .DELETE()
-                            .uri(builder.uri())
-                            //FIXME: configurable timeouts.
-                            .timeout(Duration.ofSeconds(10L))
-                            .build();
-                        
-                    return serviceRpcClient.execute(request, BarRecord.class);
-                }
-                        
-                @Override
-                public String createBar(BarRecord record) {
-                    URIBuilder builder = new URIBuilder()
-                            .hostAndScheme(schemeHostAndPort)
-                            .appendPath("/ucommerce/api/test/crud-bar-service/create-bar");
-                        
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
-                            .uri(builder.uri())
-                            //FIXME: configurable timeouts.
-                            .timeout(Duration.ofSeconds(10L))
-                            .build();
-                        
-                    return serviceRpcClient.execute(request, BarRecord.class);
-                }
-                        
+                                                
                 @Override
                 public void updateBar(BarRecord record) {
+                
                     URIBuilder builder = new URIBuilder()
-                            .hostAndScheme(schemeHostAndPort)
+                            .schemeAndHost(schemeHostAndPort)
                             .appendPath("/ucommerce/api/test/crud-bar-service/update-bar");
                         
                     HttpRequest request = HttpRequest.newBuilder()
@@ -205,8 +269,10 @@ publx1ic class RpcClientBuilderTest {
                             .timeout(Duration.ofSeconds(10L))
                             .build();
                         
-                    serviceRpcClient.execute(request);
+                    return serviceRpcClient.execute(request, null);
                 }
-            }""";
+                
+            }
+            """;
 
 }

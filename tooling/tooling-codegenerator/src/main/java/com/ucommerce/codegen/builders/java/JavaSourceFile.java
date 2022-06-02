@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * The calling contexts are responsible for the content of each section. The sections will be put together in {@link #writeToFile(Path)}.
  */
 public class JavaSourceFile extends GeneratedFile {
-    private static String SPACES = "                                                                      ";
+
     private String targetPackage;
     private Set<String> imports = new LinkedHashSet<>();
 
@@ -67,9 +67,9 @@ public class JavaSourceFile extends GeneratedFile {
 
         String fieldsSection = this.fields.stream().map(e -> "    " + e).collect(Collectors.joining("\n\n"));
         String constructorSection = this.constructors.stream()
-                .map(e -> addIndentation(e, 4))
+                .map(e -> SourceBuilderUtil.addIndentation(e, 4))
                 .collect(Collectors.joining("\n\n"));
-        String methodSection = this.methods.stream().map(e -> addIndentation(e, 4))
+        String methodSection = this.methods.stream().map(e -> SourceBuilderUtil.addIndentation(e, 4))
             .collect(Collectors.joining("\n\n"));
 
         return MessageFormat.format(JavaClassTemplate,
@@ -109,14 +109,6 @@ public class JavaSourceFile extends GeneratedFile {
         return this.constructors;
     }
 
-    private static String addIndentation(String s, int spacesCount) {
-        String spaces = SPACES.substring(0, spacesCount);
-        String[] split = s.split("\n");
-        String indentedMethod = Arrays.stream(split)
-                .map(methodLine -> methodLine.length() == 0 ? methodLine : spaces + methodLine)
-                .collect(Collectors.joining("\n"));
-        return indentedMethod;
-    }
 
     private static String JavaClassTemplate = """
             {0}

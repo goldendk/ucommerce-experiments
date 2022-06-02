@@ -14,6 +14,12 @@ public class RpcClientBuilder extends JavaSourceBuilder {
         this.moduleName = moduleName;
     }
 
+
+    @Override
+    protected String resolvePackage(Class toConstruct) {
+        return super.resolvePackage(toConstruct) + ".rpc";
+    }
+
     @Override
     protected String resolveClassName(Class toConstruct) {
         return toConstruct.getSimpleName() + "RpcClient";
@@ -31,33 +37,75 @@ public class RpcClientBuilder extends JavaSourceBuilder {
     @Override
     public void buildMethodBody(Class toConstruct, Method method) {
         String verb = HttpBuilderHelper.resolveHttpVerb(method);
-        StringBuilder builder = new StringBuilder();
+        StringBuilder methodBodyBuilder = new StringBuilder();
         String servicePath = HttpBuilderHelper.buildServiceHttpPath(moduleName, toConstruct);
         String methodPath = HttpBuilderHelper.convertMethodNameToUrlPath(method.getName());
 
-        builder.append(MessageFormat.format(URI_BUILDER_TEMPLATE,
-                servicePath + methodPath));
+        String uribuilderSection = MessageFormat.format(URI_BUILDER_TEMPLATE,
+                servicePath + methodPath);
 
-        builder.append(NEW_LINE);
-        builder.append(NEW_LINE);
+        methodBodyBuilder.append(NEW_LINE);
+        methodBodyBuilder.append(SourceBuilderUtil.addIndentation(uribuilderSection, 4));
 
+        String verbMethodCallValue = null;
         switch (verb) {
             case "GET":
-
-                for (Parameter param : method.getParameters()) {
-                    if (String.class.equals(param.getType())) {
-                        builder.append(MessageFormat.format(QUERY_STRING_PARAM_GUARD, param.getName()));
-                    }
-                }
-                builder.append(NEW_LINE);
-                builder.append(NEW_LINE);
-                builder.append(MessageFormat.format(REQUEST_BUILDER_TEMPLATE, "GET()"));
+            case "DELETE":
+                verbMethodCallValue = verb.toUpperCase() + "()";
+                break;
+            case "PUT":
+            case "POST":
+                verbMethodCallValue = MessageFormat.format(SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE, verb.toUpperCase());
                 break;
         }
 
+        for (Parameter param : method.getParameters()) {
+            if (String.class.equals(param.getType())) {
+                methodBodyBuilder.append(NEW_LINE);
+                methodBodyBuilder.append(NEW_LINE);
+                String queryStringGuard = MessageFormat.format(QUERY_STRING_PARAM_GUARD, param.getName());
+                queryStringGuard = SourceBuilderUtil.addIndentation(queryStringGuard, 4);
+                methodBodyBuilder.append(queryStringGuard);
+                currentFile.getImports().add("org.apache.commons.lang3.StringUtils");
+            }
+        }
+        if (method.getParameters().length > 0) {
+            methodBodyBuilder.append(NEW_LINE);
+            methodBodyBuilder.append(NEW_LINE);
+        }
 
-        methodBuilder.append(builder);
+
+        String requestBuilderSection = MessageFormat.format(REQUEST_BUILDER_TEMPLATE, verbMethodCallValue);
+        methodBodyBuilder.append(SourceBuilderUtil.addIndentation(requestBuilderSection, 4));
+        currentFile.getImports().add("java.net.http.HttpRequest");
+        currentFile.getImports().add("java.time.Duration");
+
+        methodBodyBuilder.append(NEW_LINE);
+        methodBodyBuilder.append(NEW_LINE);
+
+        String returnType = method.getReturnType().getSimpleName();
+
+        if ("void".equals(returnType)) {
+            returnType = "null";
+        } else {
+            returnType = returnType + ".class";
+            if (MethodHelper.isComplex(method.getReturnType())) {
+                currentFile.getImports().add(method.getReturnType().getName());
+            }
+        }
+
+        methodBodyBuilder.append(SourceBuilderUtil.addIndentation(MessageFormat.format(RETURN_TEMPLATE, returnType), 4));
+
+        methodBuilder.append(methodBodyBuilder);
     }
+
+
+    private static String SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE = """
+            {0}(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))""";
+
+    private static String RETURN_TEMPLATE = """
+            return serviceRpcClient.execute(request, {0});
+            """;
 
     private static String COSTRUCTOR_TEMPLATE =
             """

@@ -58,7 +58,7 @@ class DirectMethodProxyBuilderTest {
         List<JavaSourceFile> generatedFiles = builder.getGeneratedFiles();
         assertEquals("""
                         @Override
-                        public BarRecord getBar(String name){
+                        public BarRecord getBar(String name) {
 
                             return this.delegate.getBar(name);
 

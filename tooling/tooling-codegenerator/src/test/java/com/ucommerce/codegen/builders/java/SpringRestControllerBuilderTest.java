@@ -55,7 +55,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @GetMapping("/get-bar")
-                public BarRecord getBar(@RequestParam("name") String name){
+                public BarRecord getBar(@RequestParam("name") String name) {
                     
                     return this.delegate.getBar(name);
                                 
@@ -95,7 +95,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PostMapping("/get-bar")
-                public BarRecord getBar(BarQuery query){
+                public BarRecord getBar(BarQuery query) {
                     
                     return this.delegate.getBar(query);
                                 
@@ -133,7 +133,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @DeleteMapping("/delete-bar")
-                public void deleteBar(@RequestParam("name") String name){
+                public void deleteBar(@RequestParam("name") String name) {
                     
                     this.delegate.deleteBar(name);
                                 
@@ -172,7 +172,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PostMapping("/create-bar")
-                public String createBar(BarRecord record){
+                public String createBar(BarRecord record) {
                     
                     return this.delegate.createBar(record);
                                 
@@ -212,7 +212,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PutMapping("/update-bar")
-                public void updateBar(BarRecord record){
+                public void updateBar(BarRecord record) {
                     
                     this.delegate.updateBar(record);
                                 
@@ -262,28 +262,28 @@ class SpringRestControllerBuilderTest {
                     }
                                 
                     @PostMapping("/get-bar")
-                    public BarRecord getBar(BarQuery query){
+                    public BarRecord getBar(BarQuery query) {
                                 
                         return this.delegate.getBar(query);
                                 
                     }
                                 
                     @GetMapping("/get-bar")
-                    public BarRecord getBar(@RequestParam("name") String name){
+                    public BarRecord getBar(@RequestParam("name") String name) {
                                 
                         return this.delegate.getBar(name);
                                 
                     }
                                 
                     @GetMapping("/some-other-command")
-                    public BarRecord someOtherCommand(){
+                    public BarRecord someOtherCommand() {
                                 
                         return this.delegate.someOtherCommand();
                                 
                     }
                                 
                     @GetMapping("/some-random-command")
-                    public void someRandomCommand(){
+                    public void someRandomCommand() {
                                 
                         this.delegate.someRandomCommand();
                                 

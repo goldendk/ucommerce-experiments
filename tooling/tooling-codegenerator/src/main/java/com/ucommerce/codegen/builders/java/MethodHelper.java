@@ -46,17 +46,24 @@ public class MethodHelper {
     }
 
     public static boolean isComplex(Parameter parameter) {
-        if (parameter.getType().isPrimitive()) {
-            return false;
-        } else if (SIMPLE_TYPES.contains(parameter.getType())) {
-            return false;
-        } else if (parameter.getType().isEnum()) {
-            return false;
-        } else if (parameter.getType().isRecord()) {
+        boolean isComplex = isComplex(parameter.getType());
+
+        if (isComplex) {
             logger.info("Parameter is complex " + parameter.getName() + ":" + parameter.getType().getSimpleName());
+        }
+        return isComplex;
+    }
+
+    public static boolean isComplex(Class<?> type) {
+        if (type.isPrimitive()) {
+            return false;
+        } else if (SIMPLE_TYPES.contains(type)) {
+            return false;
+        } else if (type.isEnum()) {
+            return false;
+        } else if (type.isRecord()) {
             return true;
         } else {
-            logger.info("Parameter is complex " + parameter.getName() + ":" + parameter.getType().getSimpleName());
             return true;
         }
     }

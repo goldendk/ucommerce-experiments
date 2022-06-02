@@ -1,5 +1,6 @@
 package com.ucommerce.codegen.builders.java;
 
+import com.ucommerce.codegen.FQRef;
 import org.apache.commons.text.CaseUtils;
 
 import java.lang.reflect.Method;
@@ -39,7 +40,7 @@ public class SpringRestControllerBuilder extends JavaSourceBuilder {
     }
 
     @Override
-    public List<String> resolveImplements(Class toConstruct) {
+    public List<FQRef> resolveImplements(Class toConstruct) {
         return Collections.emptyList();
     }
 

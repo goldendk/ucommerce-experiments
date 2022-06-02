@@ -1,5 +1,6 @@
 package com.ucommerce.codegen.builders.java;
 
+import com.ucommerce.codegen.FQRef;
 import com.ucommerce.codegen.SourceCodeBuilder;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,8 +36,9 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
      * @param toConstruct
      * @return
      */
-    public List<String> resolveImplements(Class toConstruct) {
-        return List.of(toConstruct.getSimpleName());
+    public List<FQRef> resolveImplements(Class toConstruct) {
+        List<FQRef> result = List.of(new FQRef(toConstruct.getPackageName(), toConstruct.getSimpleName()));
+        return result;
     }
 
     @Override
@@ -44,11 +46,15 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
         List<String> classAnnotations = resolveClassAnnotations(toConstruct);
         currentFile.getClassSignature().addAll(classAnnotations);
 
-        List<String> implementList = resolveImplements(toConstruct);
+        List<FQRef> implementList = resolveImplements(toConstruct);
 
         String signature = "public class " + resolveClassName(toConstruct);
         if (!implementList.isEmpty()) {
-            signature += (" implements " + implementList.stream().collect(Collectors.joining(", ")));
+            signature += " implements ";
+            String targetPackage = resolvePackage(toConstruct);
+            implementList.stream().filter(e -> !e.packagePath().equals(targetPackage))
+                    .forEach(e -> currentFile.getImports().add(e.packagePath() + "." + e.className()));
+            signature += implementList.stream().map(e -> e.className()).collect(Collectors.joining(", "));
         }
         currentFile.getClassSignature().add(signature);
     }
@@ -86,9 +92,10 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
 
     /**
      * Checks if the type needs to be imported, and if so, adds it to the list of imports.
+     *
      * @param fullyQualifiedName
      */
-    protected void checkAndImport(String fullyQualifiedName){
+    protected void checkAndImport(String fullyQualifiedName) {
 
         String paramPackage = fullyQualifiedName;
         int index = paramPackage.lastIndexOf(".");
@@ -108,7 +115,7 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
 
     @Override
     public void afterParameters() {
-        methodBuilder.append("){" + NEW_LINE);
+        methodBuilder.append(") {" + NEW_LINE);
         paramCount = 0;
     }
 

@@ -63,28 +63,28 @@ public class FooServiceDirectProxy implements FooService {
     }
     
     @Override
-    public BarRecord getBar(BarQuery query){
+    public BarRecord getBar(BarQuery query) {
 
         return this.delegate.getBar(query);
 
     }
 
     @Override
-    public BarRecord getBar(String name){
+    public BarRecord getBar(String name) {
 
         return this.delegate.getBar(name);
 
     }
 
     @Override
-    public BarRecord someOtherCommand(){
+    public BarRecord someOtherCommand() {
 
         return this.delegate.someOtherCommand();
 
     }
 
     @Override
-    public void someRandomCommand(){
+    public void someRandomCommand() {
 
         this.delegate.someRandomCommand();
 
