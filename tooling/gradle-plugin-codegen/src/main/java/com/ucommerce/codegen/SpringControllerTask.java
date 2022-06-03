@@ -4,22 +4,16 @@ import com.ucommerce.codegen.builders.java.SpringRestControllerBuilder;
 import kotlin.Suppress;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
-import org.gradle.api.file.RegularFileProperty;
-import org.gradle.api.model.ObjectFactory;
-import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.List;
 
-public abstract class SimpleTask extends DefaultTask {
+public abstract class SpringControllerTask extends DefaultTask {
 
     @OutputDirectory
     public File getGeneratedFileDir() {
-        File file = GreetingPlugin.resolveRootGeneratedJavaFileDirectory(getProject());
+        File file = CodegenPlugin.resolveRootGeneratedJavaFileDirectory(getProject());
         return file;
     }
 
@@ -37,7 +31,7 @@ public abstract class SimpleTask extends DefaultTask {
         }
 
         SpringRestControllerBuilder builder = new SpringRestControllerBuilder(extension.getModuleName());
-        GreetingPlugin.attemptToGenerateCode(builder, extension.getTargetInterface(), getGeneratedFileDir());
+        CodegenPlugin.attemptToGenerateCode(project, builder, extension.getTargetInterface(), getGeneratedFileDir());
         getLogger().info("Finished building Spring RestController source for " + extension.getTargetInterface());
     }
 

@@ -3,6 +3,8 @@ package com.ucommerce.codegen.builders.java;
 import com.ucommerce.codegen.FQRef;
 import com.ucommerce.codegen.SourceCodeBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
  * Builder class for Java source files. See subclasses for specific target file types.
  */
 public abstract class JavaSourceBuilder implements SourceCodeBuilder {
+    private static Logger logger = LoggerFactory.getLogger(JavaSourceBuilder.class);
+
     protected static String END = ";";
     protected static String NEW_LINE = "\n";
     private List<JavaSourceFile> generatedFiles = new ArrayList<>();
@@ -87,16 +91,21 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
         }
         methodBuilder.append(annotationString);
         methodBuilder.append(this.resolveParameterTypeAndName(method, parameter));
-        checkAndImport(parameter.getType().getName());
+        checkAndImport(parameter.getType());
     }
 
     /**
      * Checks if the type needs to be imported, and if so, adds it to the list of imports.
      *
-     * @param fullyQualifiedName
+     * @param toCheck
      */
-    protected void checkAndImport(String fullyQualifiedName) {
-
+    protected void checkAndImport(Class<?> toCheck) {
+        String fullyQualifiedName = toCheck.getName();
+        logger.info("Check and import " + fullyQualifiedName);
+        if(toCheck.isPrimitive()){
+            logger.info("Param is primitive, no import needed: " + fullyQualifiedName);
+            return;
+        }
         String paramPackage = fullyQualifiedName;
         int index = paramPackage.lastIndexOf(".");
         paramPackage = fullyQualifiedName.substring(0, index);
@@ -205,7 +214,7 @@ public abstract class JavaSourceBuilder implements SourceCodeBuilder {
                     this.delegate = {2};
                 '}'""", className, paramType, paramName);
         currentFile.getConstructors().add(constructor);
-        checkAndImport(toConstruct.getName());
+        checkAndImport(toConstruct);
     }
 
 

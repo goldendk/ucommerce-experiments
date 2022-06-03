@@ -1,5 +1,8 @@
 package org.ucommerce.shared.rest.client;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
@@ -18,7 +21,7 @@ import java.util.Optional;
  */
 public class ServiceRpcClient {
     private static String EXCEPTION_INDICATOR_HEADER = "ucommerce-exception";
-
+    private static final Gson STRINGIFIER_GSON = new GsonBuilder().setPrettyPrinting().create();
     private HttpClient client;
 
     public void initialize() {
@@ -66,4 +69,11 @@ public class ServiceRpcClient {
         }
     }
 
+    public String stringify(Object object){
+        return STRINGIFIER_GSON.toJson(object);
+    }
+
+    public void execute(HttpRequest request) {
+
+    }
 }

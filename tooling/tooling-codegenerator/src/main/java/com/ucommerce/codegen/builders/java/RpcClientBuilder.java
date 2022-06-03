@@ -27,7 +27,7 @@ public class RpcClientBuilder extends JavaSourceBuilder {
 
     @Override
     public void buildConstructors(Class toConstruct) {
-        currentFile.getConstructors().add(COSTRUCTOR_TEMPLATE);
+        currentFile.getConstructors().add(MessageFormat.format(COSTRUCTOR_TEMPLATE, resolveClassName(toConstruct)));
         currentFile.getImports().add("org.ucommerce.shared.rest.client.ServiceRpcClient");
         currentFile.getFields().add("private ServiceRpcClient " + serviceRpcClientFieldName + " = new ServiceRpcClient();");
         currentFile.getFields().add("private final String " + schemeHostAndPortFieldName + ";");
@@ -43,6 +43,7 @@ public class RpcClientBuilder extends JavaSourceBuilder {
 
         String uribuilderSection = MessageFormat.format(URI_BUILDER_TEMPLATE,
                 servicePath + methodPath);
+        currentFile.getImports().add("org.ucommerce.shared.rest.client.URIBuilder");
 
         methodBodyBuilder.append(NEW_LINE);
         methodBodyBuilder.append(SourceBuilderUtil.addIndentation(uribuilderSection, 4));
@@ -55,7 +56,17 @@ public class RpcClientBuilder extends JavaSourceBuilder {
                 break;
             case "PUT":
             case "POST":
-                verbMethodCallValue = MessageFormat.format(SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE, verb.toUpperCase());
+                //find complex parameter if any.
+                Parameter complexParam = null;
+                for (Parameter parameter : method.getParameters()) {
+                    if (MethodHelper.isComplex(parameter)) {
+                        complexParam = parameter;
+                        break;
+                    }
+                }
+
+
+                verbMethodCallValue = MessageFormat.format(SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE, verb.toUpperCase(), complexParam.getName());
                 break;
         }
 
@@ -83,38 +94,40 @@ public class RpcClientBuilder extends JavaSourceBuilder {
         methodBodyBuilder.append(NEW_LINE);
         methodBodyBuilder.append(NEW_LINE);
 
-        String returnType = method.getReturnType().getSimpleName();
 
-        if ("void".equals(returnType)) {
-            returnType = "null";
+        if ("void".equals(method.getReturnType().getSimpleName())) {
+            methodBodyBuilder.append(SourceBuilderUtil.addIndentation(NO_RETURN_TEMPLATE, 4));
         } else {
-            returnType = returnType + ".class";
+            String returnType = method.getReturnType().getSimpleName() + ".class";
             if (MethodHelper.isComplex(method.getReturnType())) {
                 currentFile.getImports().add(method.getReturnType().getName());
             }
+            methodBodyBuilder.append(SourceBuilderUtil.addIndentation(MessageFormat.format(RETURN_TEMPLATE, returnType), 4));
         }
 
-        methodBodyBuilder.append(SourceBuilderUtil.addIndentation(MessageFormat.format(RETURN_TEMPLATE, returnType), 4));
 
         methodBuilder.append(methodBodyBuilder);
     }
 
 
     private static String SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE = """
-            {0}(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))""";
+            {0}(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify({1})))""";
 
     private static String RETURN_TEMPLATE = """
             return serviceRpcClient.execute(request, {0});
             """;
 
+    private static String NO_RETURN_TEMPLATE = """
+            serviceRpcClient.execute(request);
+            """;
     private static String COSTRUCTOR_TEMPLATE =
             """
-                    public CrudBarServiceRpcClient(String schemeHostAndPort) {
+                    public {0}(String schemeHostAndPort) '{'
                         
                         serviceRpcClient.initialize();
                         this.schemeHostAndPort = schemeHostAndPort;
                                         
-                    }""";
+                    '}'""";
 
     private static String URI_BUILDER_TEMPLATE = """
             URIBuilder builder = new URIBuilder()

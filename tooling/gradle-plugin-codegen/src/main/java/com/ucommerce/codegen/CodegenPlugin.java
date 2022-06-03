@@ -6,6 +6,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.logging.Logger;
+import org.gradle.api.plugins.AppliedPlugin;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.provider.Property;
@@ -16,9 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 
-abstract public class GreetingPlugin implements Plugin<Project> {
+abstract public class CodegenPlugin implements Plugin<Project> {
     public static final String RPC_CLIENT_EXTENSION_NAME = "ucommerceRcpClient";
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(GreetingPlugin.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(CodegenPlugin.class);
     private static final String generatedSourceRootDir = "generated/sources/ucommerce";
 
     @Input
@@ -54,7 +55,7 @@ abstract public class GreetingPlugin implements Plugin<Project> {
 
         });
 
-        target.getTasks().register("simpleTask", SimpleTask.class).configure((task) -> {
+        target.getTasks().register("springController", SpringControllerTask.class).configure((task) -> {
             task.setGroup("UCommerce");
             task.setDescription("Code generation for UCommerce REST endpoints.");
             //FIXME: Add up-to-date never here...
@@ -62,7 +63,7 @@ abstract public class GreetingPlugin implements Plugin<Project> {
         target.getTasks().register("rpcClient", RpcClientTask.class).configure((task) -> {
             task.setGroup("UCommerce");
             task.setDescription("Generates code for an RPC client (HTTP based).");
-            task.getOutputs().upToDateWhen((task1)->false);
+            task.getOutputs().upToDateWhen((task1) -> false);
         });
     }
 
@@ -82,7 +83,7 @@ abstract public class GreetingPlugin implements Plugin<Project> {
         });
     }
 
-    public static void attemptToGenerateCode(JavaSourceBuilder codeBuilder, String targetInterface, File generatedFileDir) {
+    public static void attemptToGenerateCode(Project project, JavaSourceBuilder codeBuilder, String targetInterface, File generatedFileDir) {
 
         if (targetInterface == null) {
             System.out.println("Target interface is null, returning...");
@@ -95,8 +96,13 @@ abstract public class GreetingPlugin implements Plugin<Project> {
         try {
             cl = Class.forName(targetInterface);
         } catch (ClassNotFoundException e) {
-            logger.error("Could not load class: " + targetInterface, e);
-            return;
+            ClassLoader classLoader = GradleTool.loadProjectClassPath(project);
+            try {
+                cl = classLoader.loadClass(targetInterface);
+            } catch (ClassNotFoundException ex) {
+                logger.error("Could not load class: " + targetInterface, e);
+                throw new RuntimeException(ex);
+            }
         }
         director.construct(cl);
         List<JavaSourceFile> generatedFiles = codeBuilder.getGeneratedFiles();

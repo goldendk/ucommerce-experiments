@@ -151,7 +151,7 @@ public class RpcClientBuilderTest {
                                     .timeout(Duration.ofSeconds(10L))
                                     .build();
                              
-                            return serviceRpcClient.execute(request, null);""",
+                            serviceRpcClient.execute(request);""",
                 builder.methodBuilder.toString());
     }
 
@@ -165,6 +165,7 @@ public class RpcClientBuilderTest {
             import java.time.Duration;
             import org.apache.commons.lang3.StringUtils;
             import org.ucommerce.shared.rest.client.ServiceRpcClient;
+            import org.ucommerce.shared.rest.client.URIBuilder;
                         
             public class CrudBarServiceRpcClient implements CrudBarService {
                         
@@ -214,7 +215,7 @@ public class RpcClientBuilderTest {
                             .timeout(Duration.ofSeconds(10L))
                             .build();
                         
-                    return serviceRpcClient.execute(request, null);
+                    serviceRpcClient.execute(request);
                 }
                         
                 @Override
@@ -246,7 +247,7 @@ public class RpcClientBuilderTest {
                             .appendPath("/ucommerce/api/test/crud-bar-service/get-bar");
                         
                     HttpRequest request = HttpRequest.newBuilder()
-                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
+                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(query)))
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
                             .timeout(Duration.ofSeconds(10L))
@@ -269,7 +270,7 @@ public class RpcClientBuilderTest {
                             .timeout(Duration.ofSeconds(10L))
                             .build();
                         
-                    return serviceRpcClient.execute(request, null);
+                    serviceRpcClient.execute(request);
                 }
                 
             }
