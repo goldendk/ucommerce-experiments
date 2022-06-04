@@ -2,12 +2,15 @@ package org.ucommerce.shared.rest.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.Charsets;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Optional;
 
@@ -32,7 +35,7 @@ public class ServiceRpcClient {
     }
 
     private boolean is2xx(int statusCode) {
-        return 200 <= statusCode && 299 <= statusCode;
+        return 200 <= statusCode && 299 >= statusCode;
     }
 
     /**
@@ -43,7 +46,7 @@ public class ServiceRpcClient {
     public <T> T execute(HttpRequest request, Class<T> responseType) {
 
         try {
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString(Charset.forName(StandardCharsets.UTF_8.name())));
 
             if (is2xx(response.statusCode())) {
                 return new OKResponseHandler().processResponse(response, responseType);
@@ -69,11 +72,13 @@ public class ServiceRpcClient {
         }
     }
 
-    public String stringify(Object object){
-        return STRINGIFIER_GSON.toJson(object);
+    public HttpRequest.Builder createRequestBuilder() {
+        return HttpRequest.newBuilder()
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json");
     }
 
-    public void execute(HttpRequest request) {
-
+    public String stringify(Object object) {
+        return STRINGIFIER_GSON.toJson(object);
     }
 }

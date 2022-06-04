@@ -22,7 +22,7 @@ public abstract class SpringControllerTask extends DefaultTask {
     public void doWork() {
         Project project = getProject();
         getLogger().info("after configurations: " + project.getConfigurations().getNames());
-        RestControllerExtension extension = (RestControllerExtension) project.getExtensions().getByName("restController");
+        RestControllerExtension extension = (RestControllerExtension) project.getExtensions().getByName("ucommerceRestController");
 
         System.out.println(getGeneratedFileDir());
         if(extension.getTargetInterface() == null || extension.getTargetInterface().length() == 0){

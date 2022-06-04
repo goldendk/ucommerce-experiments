@@ -31,7 +31,7 @@ abstract public class CodegenPlugin implements Plugin<Project> {
     @Override
     public void apply(Project target) {
         target.getExtensions().create("greeting", GreetingExtension.class);
-        target.getExtensions().create("restController", RestControllerExtension.class);
+        target.getExtensions().create("ucommerceRestController", RestControllerExtension.class);
         target.getExtensions().create(RPC_CLIENT_EXTENSION_NAME, RpcClientExtension.class);
         target.getPluginManager().apply(JavaPlugin.class);
         prepareGeneratedJavaSourceFolder(target);
@@ -45,7 +45,7 @@ abstract public class CodegenPlugin implements Plugin<Project> {
         target.afterEvaluate((project) -> {
             final Logger logger = project.getLogger();
             logger.info("after configurations: " + project.getConfigurations().getNames());
-            RestControllerExtension restControllerExtension = (RestControllerExtension) project.getExtensions().getByName("restController");
+            RestControllerExtension restControllerExtension = (RestControllerExtension) project.getExtensions().getByName("ucommerceRestController");
 
             if (restControllerExtension != null) {
                 //         attemptToGenerateCode(restControllerExtension, restControllerExtension.getGeneratedFileDir());

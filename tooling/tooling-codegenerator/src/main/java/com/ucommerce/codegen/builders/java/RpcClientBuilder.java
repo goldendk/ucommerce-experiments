@@ -67,6 +67,7 @@ public class RpcClientBuilder extends JavaSourceBuilder {
 
 
                 verbMethodCallValue = MessageFormat.format(SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE, verb.toUpperCase(), complexParam.getName());
+                currentFile.getImports().add("java.nio.charset.StandardCharsets");
                 break;
         }
 
@@ -75,6 +76,14 @@ public class RpcClientBuilder extends JavaSourceBuilder {
                 methodBodyBuilder.append(NEW_LINE);
                 methodBodyBuilder.append(NEW_LINE);
                 String queryStringGuard = MessageFormat.format(QUERY_STRING_PARAM_GUARD, param.getName());
+                queryStringGuard = SourceBuilderUtil.addIndentation(queryStringGuard, 4);
+                methodBodyBuilder.append(queryStringGuard);
+                currentFile.getImports().add("org.apache.commons.lang3.StringUtils");
+            }
+            if(int.class.equals(param.getType())){
+                methodBodyBuilder.append(NEW_LINE);
+                methodBodyBuilder.append(NEW_LINE);
+                String queryStringGuard = MessageFormat.format(QUERY_INT_PARAM_GUARD, param.getName());
                 queryStringGuard = SourceBuilderUtil.addIndentation(queryStringGuard, 4);
                 methodBodyBuilder.append(queryStringGuard);
                 currentFile.getImports().add("org.apache.commons.lang3.StringUtils");
@@ -111,7 +120,7 @@ public class RpcClientBuilder extends JavaSourceBuilder {
 
 
     private static String SUBMIT_BODY_HTTP_VERB_METHOD_TEMPLATE = """
-            {0}(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify({1})))""";
+            {0}(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify({1}), StandardCharsets.UTF_8))""";
 
     private static String RETURN_TEMPLATE = """
             return serviceRpcClient.execute(request, {0});
@@ -138,8 +147,13 @@ public class RpcClientBuilder extends JavaSourceBuilder {
             if (StringUtils.isNotBlank({0})) '{'
                 builder.appendQuery("{0}", {0});
             '}'""";
+
+    private static String QUERY_INT_PARAM_GUARD = """
+                builder.appendQuery("{0}", String.valueOf({0}));""";
+
+
     private static String REQUEST_BUILDER_TEMPLATE = """
-            HttpRequest request = HttpRequest.newBuilder()
+            HttpRequest request = serviceRpcClient.createRequestBuilder()
                     .{0}
                     .uri(builder.uri())
                     //FIXME: configurable timeouts.

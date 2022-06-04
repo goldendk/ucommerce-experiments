@@ -63,6 +63,10 @@ public class SpringRestControllerBuilder extends JavaSourceBuilder {
             currentFile.getImports().add("org.springframework.web.bind.annotation.RequestParam");
             result.add("@RequestParam(\"" + parameter.getName() + "\")");
         }
+        else{
+            result.add("@RequestBody");
+            currentFile.getImports().add("org.springframework.web.bind.annotation.RequestBody");
+        }
 
         return result;
     }
