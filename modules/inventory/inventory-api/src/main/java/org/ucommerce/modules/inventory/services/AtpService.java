@@ -1,5 +1,6 @@
 package org.ucommerce.modules.inventory.services;
 
+import org.ucommerce.modules.inventory.commands.ReservationRequest;
 import org.ucommerce.modules.inventory.model.Inventory;
 import org.ucommerce.modules.inventory.model.LocationRequest;
 import org.ucommerce.modules.inventory.model.ProductRequest;
@@ -30,7 +31,7 @@ public interface AtpService {
      * @param inventories        a list of inventories to reserve.
      * @param externalIdentifier an identifier from e.g. an order system.
      */
-    void createReservation(Inventory[] inventories, String externalIdentifier);
+    void createReservation(ReservationRequest reservationRequest);
 
 
     /**

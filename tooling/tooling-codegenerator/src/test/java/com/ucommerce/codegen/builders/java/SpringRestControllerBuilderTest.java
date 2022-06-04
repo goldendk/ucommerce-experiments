@@ -5,8 +5,10 @@ import com.ucommerce.testapp.BarQuery;
 import com.ucommerce.testapp.BarRecord;
 import com.ucommerce.testapp.CrudBarService;
 import com.ucommerce.testapp.FooService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.List;
@@ -19,11 +21,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SpringRestControllerBuilderTest {
 
 
+    private SpringRestControllerBuilder builder;
+    @BeforeEach
+    public void beforeEach(){
+        builder = new SpringRestControllerBuilder("test");
+    }
+
     @Test
     public void givenCrudService_whenMappingSimpleGetBar_thenBuildGetRestMethod() throws NoSuchMethodException {
         //GIVEN
-        SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
-
         Class toBuild = CrudBarService.class;
         Method method = toBuild.getMethod("getBar", String.class);
 
@@ -49,7 +55,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @GetMapping("/get-bar")
-                public BarRecord getBar(@RequestParam("name") String name){
+                public BarRecord getBar(@RequestParam("name") String name) {
                     
                     return this.delegate.getBar(name);
                                 
@@ -63,8 +69,6 @@ class SpringRestControllerBuilderTest {
     @Test
     public void givenCrudService_whenMappingComplexGetBar_thenBuildPostRestMethod() throws NoSuchMethodException {
         //GIVEN
-        SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
-
         Class toBuild = CrudBarService.class;
         Method method = toBuild.getMethod("getBar", BarQuery.class);
 
@@ -91,7 +95,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PostMapping("/get-bar")
-                public BarRecord getBar(BarQuery query){
+                public BarRecord getBar(BarQuery query) {
                     
                     return this.delegate.getBar(query);
                                 
@@ -103,8 +107,6 @@ class SpringRestControllerBuilderTest {
     @Test
     public void givenCrudService_whenMappingDeleteBar_thenBuildDeleteRestMethod() throws NoSuchMethodException {
         //GIVEN
-        SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
-
         Class toBuild = CrudBarService.class;
         Method method = toBuild.getMethod("deleteBar", String.class);
 
@@ -131,7 +133,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @DeleteMapping("/delete-bar")
-                public void deleteBar(@RequestParam("name") String name){
+                public void deleteBar(@RequestParam("name") String name) {
                     
                     this.delegate.deleteBar(name);
                                 
@@ -144,8 +146,6 @@ class SpringRestControllerBuilderTest {
     @Test
     public void givenCrudService_whenMappingCreateBar_thenBuildPostRestMethod() throws NoSuchMethodException {
         //GIVEN
-        SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
-
         Class toBuild = CrudBarService.class;
         Method method = toBuild.getMethod("createBar", BarRecord.class);
 
@@ -172,7 +172,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PostMapping("/create-bar")
-                public String createBar(BarRecord record){
+                public String createBar(BarRecord record) {
                     
                     return this.delegate.createBar(record);
                                 
@@ -186,8 +186,6 @@ class SpringRestControllerBuilderTest {
     @Test
     public void givenCrudService_whenMappingUpdateBar_thenBuildPutRestMethod() throws NoSuchMethodException {
         //GIVEN
-        SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
-
         Class toBuild = CrudBarService.class;
         Method method = toBuild.getMethod("updateBar", BarRecord.class);
 
@@ -214,7 +212,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PutMapping("/update-bar")
-                public void updateBar(BarRecord record){
+                public void updateBar(BarRecord record) {
                     
                     this.delegate.updateBar(record);
                                 
@@ -226,7 +224,6 @@ class SpringRestControllerBuilderTest {
 
     @Test
     public void givenFooService_whenBuildingUsingDirector_thenShouldGenerateGoodControllerSource() {
-        SpringRestControllerBuilder builder = new SpringRestControllerBuilder();
         CodegenDirector director = new CodegenDirector(builder);
 
         //WHEN
@@ -239,18 +236,23 @@ class SpringRestControllerBuilderTest {
         JavaSourceFile controllerFile = generatedFiles.get(0);
 
         String controllerSource = controllerFile.fillOutTemplate();
+        //FIXME: sort imports alphabetically.
+        //FIXME: Add parameter imports when needed.
+        //FIXME: Add module to service controller path.
+        //FIXME:
         assertEquals("""     
                 package com.ucommerce.testapp.rest;
                                 
-                                
-                import org.springframework.web.bind.annotation.RequestMapping;
-                import org.springframework.web.bind.annotation.RestController;
-                import org.springframework.web.bind.annotation.PostMapping;
+                import com.ucommerce.testapp.BarQuery;
+                import com.ucommerce.testapp.FooService;
                 import org.springframework.web.bind.annotation.GetMapping;
+                import org.springframework.web.bind.annotation.PostMapping;
+                import org.springframework.web.bind.annotation.RequestMapping;
                 import org.springframework.web.bind.annotation.RequestParam;
+                import org.springframework.web.bind.annotation.RestController;
                                 
                 @RestController
-                @RequestMapping("/ucommerce/api/inventory/atp-service")
+                @RequestMapping("/ucommerce/api/test/foo-service")
                 public class FooServiceRestController {
                                 
                     private FooService delegate;
@@ -260,28 +262,28 @@ class SpringRestControllerBuilderTest {
                     }
                                 
                     @PostMapping("/get-bar")
-                    public BarRecord getBar(BarQuery query){
+                    public BarRecord getBar(BarQuery query) {
                                 
                         return this.delegate.getBar(query);
                                 
                     }
                                 
                     @GetMapping("/get-bar")
-                    public BarRecord getBar(@RequestParam("name") String name){
+                    public BarRecord getBar(@RequestParam("name") String name) {
                                 
                         return this.delegate.getBar(name);
                                 
                     }
                                 
                     @GetMapping("/some-other-command")
-                    public BarRecord someOtherCommand(){
+                    public BarRecord someOtherCommand() {
                                 
                         return this.delegate.someOtherCommand();
                                 
                     }
                                 
                     @GetMapping("/some-random-command")
-                    public void someRandomCommand(){
+                    public void someRandomCommand() {
                                 
                         this.delegate.someRandomCommand();
                                 

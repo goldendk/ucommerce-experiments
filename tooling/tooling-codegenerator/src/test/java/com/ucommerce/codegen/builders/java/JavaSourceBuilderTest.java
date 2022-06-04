@@ -70,7 +70,8 @@ class JavaSourceBuilderTest {
         assertEquals(javaSourceFile.getMethods().size(), 1);
         String s = javaSourceFile.getMethods().get(0);
         assertEquals("""
-                public void someRandomCommand(){
+                @Override
+                public void someRandomCommand() {
                                                               
                 }""", s); // no implementation in abstract super class.
     }
@@ -96,7 +97,8 @@ class JavaSourceBuilderTest {
         assertEquals(javaSourceFile.getMethods().size(), 1);
         String s = javaSourceFile.getMethods().get(0);
         assertEquals("""
-                public BarRecord someOtherCommand(){
+                @Override
+                public BarRecord someOtherCommand() {
                           
                 }""", s); // no implementation in abstract super class.
     }
@@ -123,7 +125,8 @@ class JavaSourceBuilderTest {
         assertEquals(javaSourceFile.getMethods().size(), 1);
         String s = javaSourceFile.getMethods().get(0);
         assertEquals("""
-                public BarRecord getBar(String name){
+                @Override
+                public BarRecord getBar(String name) {
                                 
                 }""", s); // no implementation in abstract super class.
     }
@@ -150,7 +153,8 @@ class JavaSourceBuilderTest {
         String method = sourceFile.getMethods().get(1);//getBar(String name)...
 
         assertEquals("""
-                public BarRecord getBar(@Nullable @Deprecated String name){
+                @Override
+                public BarRecord getBar(@Nullable @Deprecated String name) {
                     
                     return this.delegate.getBar(name);
                     

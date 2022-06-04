@@ -51,35 +51,40 @@ class JavaSourceFileTest {
     private static String FOO_SERVICE_RESULT = """
 package com.ucommerce.testapp;
 
+import com.ucommerce.testapp.BarQuery;
+import com.ucommerce.testapp.FooService;
 
-
-public class FooServiceDirectProxy {
+public class FooServiceDirectProxy implements FooService {
 
     private FooService delegate;
     
     public FooServiceDirectProxy (FooService delegate) {
         this.delegate = delegate;
     }
-
-    public BarRecord getBar(BarQuery query){
+    
+    @Override
+    public BarRecord getBar(BarQuery query) {
 
         return this.delegate.getBar(query);
 
     }
 
-    public BarRecord getBar(String name){
+    @Override
+    public BarRecord getBar(String name) {
 
         return this.delegate.getBar(name);
 
     }
 
-    public BarRecord someOtherCommand(){
+    @Override
+    public BarRecord someOtherCommand() {
 
         return this.delegate.someOtherCommand();
 
     }
 
-    public void someRandomCommand(){
+    @Override
+    public void someRandomCommand() {
 
         this.delegate.someRandomCommand();
 

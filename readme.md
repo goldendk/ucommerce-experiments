@@ -143,3 +143,13 @@ An MVP implementation of this will contain the following source files:
 Generated
 - RestClientServiceProxy - client proxy marshalling java commands to http. 
 - RestControllerServiceProxy - Spring rest controller unmarshalling http response to java service method calls.
+
+
+....
+Problems getting the compile output of a project added to the classpath of the CodegenPlugin
+
+>This might help solve it: https://discuss.gradle.org/t/how-to-add-build-classes-main-to-classpath-of-custom-plugin/5661/3
+> Note: this is way too old.
+> 
+> This looks more promising, using a custom class loader: https://discuss.gradle.org/t/how-to-import-just-compiled-classes-in-build-gradle/30425
+> Notes on the provider API: https://melix.github.io/blog/2022/01/understanding-provider-api.html

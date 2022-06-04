@@ -16,7 +16,7 @@ gradlePlugin {
     plugins {
         create("ucommerce-codegen") {
             id = "org.ucommerce.codegen"
-            implementationClass = "com.ucommerce.codegen.GreetingPlugin"
+            implementationClass = "com.ucommerce.codegen.CodegenPlugin"
         }
     }
 }

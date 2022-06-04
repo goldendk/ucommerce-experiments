@@ -46,17 +46,24 @@ public class MethodHelper {
     }
 
     public static boolean isComplex(Parameter parameter) {
-        if (parameter.getType().isPrimitive()) {
-            return false;
-        } else if (SIMPLE_TYPES.contains(parameter.getType())) {
-            return false;
-        } else if (parameter.getType().isEnum()) {
-            return false;
-        } else if (parameter.getType().isRecord()) {
+        boolean isComplex = isComplex(parameter.getType());
+
+        if (isComplex) {
             logger.info("Parameter is complex " + parameter.getName() + ":" + parameter.getType().getSimpleName());
+        }
+        return isComplex;
+    }
+
+    public static boolean isComplex(Class<?> type) {
+        if (type.isPrimitive()) {
+            return false;
+        } else if (SIMPLE_TYPES.contains(type)) {
+            return false;
+        } else if (type.isEnum()) {
+            return false;
+        } else if (type.isRecord()) {
             return true;
         } else {
-            logger.info("Parameter is complex " + parameter.getName() + ":" + parameter.getType().getSimpleName());
             return true;
         }
     }
@@ -67,20 +74,6 @@ public class MethodHelper {
 
     public static boolean hasVoidReturnType(Method method) {
         return Void.class.equals(method.getReturnType());
-    }
-
-    /**
-     * Find the words in mixed case string like ThisIsText or HereIsSomeText
-     *
-     * @param simpleName
-     * @return the list of words to process
-     */
-    public static String convertServiceNameToRestName(String simpleName) {
-
-        List<String> words = findWordsInMixedCase(simpleName);
-
-        String serviceRestName = words.stream().map(String::toLowerCase).collect(Collectors.joining("-"));
-        return serviceRestName;
     }
 
     /**
@@ -99,15 +92,5 @@ public class MethodHelper {
         return words;
     }
 
-    /**
-     * Converts a Java method naming scheme into a http URL based one. E.g. "getBar" --&gt; "get-bar".
-     *
-     * @param name
-     * @return
-     */
-    public static String convertMethodNameToUrlName(String name) {
-        List<String> wordsInMixedCase = findWordsInMixedCase(name);
-        String urlName = wordsInMixedCase.stream().map(StringUtils::lowerCase).collect(Collectors.joining("-"));
-        return urlName;
-    }
+
 }

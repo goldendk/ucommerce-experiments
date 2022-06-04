@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
  * This CodegenDirector is meant to build different outputs for interfaces with @ExternalService annotation.
  */
 public class CodegenDirector {
-    private final JavaSourceBuilder builder;
+    private final SourceCodeBuilder builder;
 
-    public CodegenDirector(JavaSourceBuilder builder) {
+    public CodegenDirector(SourceCodeBuilder builder) {
         this.builder = builder;
     }
 
@@ -60,7 +60,7 @@ public class CodegenDirector {
     private void validateToConstruct(Class toConstruct) {
         Annotation[] annotationsByType = toConstruct.getAnnotationsByType(ExternalService.class);
         if (annotationsByType == null || annotationsByType.length == 0) {
-            throw new IllegalArgumentException("Interface provided must have @ExternalService annotation");
+            throw new IllegalArgumentException("Interface provided must have @ExternalService annotation: " + toConstruct.getName());
         }
     }
 }
