@@ -1,24 +1,3 @@
-Skip to content
-
-Search…
-All gists
-Back to GitHub
-Sign in
-Sign up
-Instantly share code, notes, and snippets.
-
-@hughbiquitous
-hughbiquitous/.gitignore
-Created 6 years ago
-13
-8
- Code
- Revisions 1
- Stars 13
- Forks 8
-<script src="https://gist.github.com/hughbiquitous/8c194635579dbc94aac171472c1495f5.js"></script>
-.gitignore for Java/IntelliJ/gradle
-.gitignore
 # From https://github.com/github/gitignore/blob/master/Gradle.gitignore
 .gradle
 /build/
