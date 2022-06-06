@@ -1,4 +1,4 @@
-name: Run Gradle on PRs
+name: Run Gradle on push
 on: push
 jobs:
   gradle:
@@ -17,4 +17,4 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Execute Gradle build
-        run: ./gradlew -b modules/ build
+        run: ./gradlew -b apps/tooling-test-app/build.gradle.kts clean build test
