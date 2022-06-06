@@ -201,3 +201,6 @@ the executable bit (not set by windows).
 This helped:
 > https://stackoverflow.com/questions/58282791/why-when-i-use-github-actions-ci-for-a-gradle-project-i-face-gradlew-permiss
 > git update-index --chmod=+x gradlew
+
+After a bit commits fixing java version and stuff, the build runs green. Now all that is required is to add the additional builds
+to the workflow file.
