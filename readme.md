@@ -145,11 +145,62 @@ Generated
 - RestControllerServiceProxy - Spring rest controller unmarshalling http response to java service method calls.
 
 
-....
-Problems getting the compile output of a project added to the classpath of the CodegenPlugin
+## June 2022
+Attempting to get the first tests executing using github actions. 
+
+Problems getting the compile output of a project added to the classpath of the CodegenPlugin in the apps/tooling-test-app application.
+
+So down the rabbit hole we go.
 
 >This might help solve it: https://discuss.gradle.org/t/how-to-add-build-classes-main-to-classpath-of-custom-plugin/5661/3
 > Note: this is way too old.
 > 
 > This looks more promising, using a custom class loader: https://discuss.gradle.org/t/how-to-import-just-compiled-classes-in-build-gradle/30425
 > Notes on the provider API: https://melix.github.io/blog/2022/01/understanding-provider-api.html
+
+Note: The classpath problem was solved by using a custom class loader.
+
+Generating dynamic classes at runtime
+> https://palashray.com/creating-class-dynamically-using-bytebuddy-and-springboot/
+
+Compile source dynamically at runtime
+> https://stackoverflow.com/questions/60664816/create-a-java-class-dynamically-and-compile-and-instantiate-at-run-time
+
+> Adding those new classes to spring can be done like so: https://tedblob.com/spring-register-bean-programmatically/
+
+#### Summation 
+
+
+Getting generated code to compile correct has run into some problems. 
+At the current time of write the strategy is to generate java source using a custom gradle task. This gradle task is executed right after the standard compileJava
+task.
+When the code is in the same module that is **generating** the source-code the code-gen plugin could not load the targetInterface class. 
+
+This was solved by using a custom class-loader to load the newly generated classes.
+
+However the newly generated code was never compiled leaving the compileTestJava standard Gradle task to fail. 
+Attempts to link up different tasks to solve the compilation step failed.
+
+Current strategy is to attempt to compile the generated source directly in the code-gen plugin. 
+Possible using a different task.
+
+#### Custom compile task
+Task seems to be executing as expected. It is, however, a challenge to get the runtime classpath of the host 
+project added to the custom Java compile tasks' classpath. 
+Gradle does not seem to want to return a list of the jar files that are needed.
+
+The attempt is to get a build script command like this to work: 
+
+> ./gradlew -b apps/tooling-test-app/build.gradle.kts clean build test
+
+Update: was successful. Now the focus can be on github actions which should work out of the box.
+
+A problem occured when running the scripts on github. The gradlew script in the root folder does not have
+the executable bit (not set by windows). 
+
+This helped:
+> https://stackoverflow.com/questions/58282791/why-when-i-use-github-actions-ci-for-a-gradle-project-i-face-gradlew-permiss
+> git update-index --chmod=+x gradlew
+
+After a bit commits fixing java version and stuff, the build runs green. Now all that is required is to add the additional builds
+to the workflow file.

@@ -3,16 +3,10 @@ package org.ucommerce.apps;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.ucommerce.apps.rest.TestInterfaceRestController;
 import org.ucommerce.apps.rpc.TestInterfaceRpcClient;
@@ -43,7 +37,7 @@ class TestInterfaceTest {
     }
 
     @Test
-    public void shouldCallCreateThing(){
+    public void shouldCallCreateThing() {
 
         String thingId = client.createThing(new ThingData("foo", 5));
         assertNotNull(thingId);
@@ -53,7 +47,6 @@ class TestInterfaceTest {
 
     @org.springframework.context.annotation.Configuration
     public static class Configuration {
-
 
         @Bean
         public TestInterfaceImpl testInterface() {
@@ -65,9 +58,5 @@ class TestInterfaceTest {
             return new TestInterfaceRestController(testInterface);
         }
 
-//        @Bean
-//        public ServletWebServerFactory servletWebServerFactory() {
-//            return new TomcatServletWebServerFactory();
-//        }
     }
 }

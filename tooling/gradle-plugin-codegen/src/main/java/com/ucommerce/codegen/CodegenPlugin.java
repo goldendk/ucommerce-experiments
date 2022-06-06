@@ -33,7 +33,7 @@ abstract public class CodegenPlugin implements Plugin<Project> {
         target.getExtensions().create("greeting", GreetingExtension.class);
         target.getExtensions().create("ucommerceRestController", RestControllerExtension.class);
         target.getExtensions().create(RPC_CLIENT_EXTENSION_NAME, RpcClientExtension.class);
-        target.getPluginManager().apply(JavaPlugin.class);
+     //   target.getPluginManager().apply(JavaPlugin.class);
         prepareGeneratedJavaSourceFolder(target);
 
         target.beforeEvaluate((project) -> {
@@ -63,7 +63,11 @@ abstract public class CodegenPlugin implements Plugin<Project> {
         target.getTasks().register("rpcClient", RpcClientTask.class).configure((task) -> {
             task.setGroup("UCommerce");
             task.setDescription("Generates code for an RPC client (HTTP based).");
-            task.getOutputs().upToDateWhen((task1) -> false);
+        });
+
+        target.getTasks().register("compileGeneratedSource", CompileSourceTask.class).configure((task)->{
+            task.setGroup("UCommerce");
+            task.setDescription("Compiles generated code.");
         });
     }
 

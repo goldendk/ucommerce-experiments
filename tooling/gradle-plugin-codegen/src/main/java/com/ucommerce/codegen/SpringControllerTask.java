@@ -33,6 +33,11 @@ public abstract class SpringControllerTask extends DefaultTask {
         SpringRestControllerBuilder builder = new SpringRestControllerBuilder(extension.getModuleName());
         CodegenPlugin.attemptToGenerateCode(project, builder, extension.getTargetInterface(), getGeneratedFileDir());
         getLogger().info("Finished building Spring RestController source for " + extension.getTargetInterface());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -4,11 +4,17 @@ import org.gradle.kotlin.dsl.support.classFilePathCandidatesFor
 apply(from = "../../gradle/common/shared-deps.gradle")
 apply(from = "../../gradle/common/shared-test-deps.gradle")
 
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+
 plugins {
     id("java")
-    id("org.ucommerce.codegen")
     id("org.springframework.boot") version "2.6.3"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.ucommerce.codegen")
 
 }
 
@@ -22,10 +28,6 @@ ucommerceRestController{
     moduleName = "test"
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-}
 
 dependencies {
 
@@ -45,8 +47,10 @@ dependencies {
 
 tasks.getByName<JavaCompile>("compileJava") {
     options.compilerArgs.add( "-parameters")
+    finalizedBy("rpcClient", "springController", "compileGeneratedSource")
 }
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
 }
+
