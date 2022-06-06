@@ -29,6 +29,7 @@ jobs:
         if: always()
         with:
           files: "apps/tooling-test-app/build/test-results/**/*.xml"
+          check_name: "apps/tooling-test-app results"
 
 # Tooling module
 
@@ -40,3 +41,4 @@ jobs:
         if: always()
         with:
           files: "tooling/tooling-codegenerator/build/test-results/**/*.xml"
+          check_name: "tooling/tooling-codegenerator results"

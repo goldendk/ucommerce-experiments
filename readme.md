@@ -218,3 +218,7 @@ This helped:
 
 After a bit commits fixing java version and stuff, the build runs green. Now all that is required is to add the additional builds
 to the workflow file.
+
+Using unit test publish plugin 
+>https://github.com/EnricoMi/publish-unit-test-result-action#github-actions-job-summary
+
