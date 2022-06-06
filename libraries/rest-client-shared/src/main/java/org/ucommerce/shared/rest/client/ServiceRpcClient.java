@@ -72,6 +72,10 @@ public class ServiceRpcClient {
         }
     }
 
+    public void execute(HttpRequest request) {
+        execute(request, Void.class); // no returns here.
+    }
+
     public HttpRequest.Builder createRequestBuilder() {
         return HttpRequest.newBuilder()
                 .header("Content-Type", "application/json")

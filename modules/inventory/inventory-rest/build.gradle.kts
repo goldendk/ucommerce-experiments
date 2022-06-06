@@ -1,5 +1,3 @@
-import com.ucommerce.codegen.Bar
-
 buildscript {
     repositories {
         mavenCentral()
@@ -13,19 +11,32 @@ buildscript {
 plugins {
     id("java-library")
     id("org.ucommerce.codegen")
-    id("org.springframework.boot") version "2.6.3"
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
-restController {
-    targetInterface = "org.ucommerce.modules.inventory.services.AtpService"
-    //foos = null;
-  //FIXME: make the extension class in rest controller generator take a list of configs, each with a module name, target package and java @ExternalService interface
-    bars = listOf(
-        Bar("someValue"),
-        Bar("otherValue")
-    )
+dependencyManagement {
+    dependencies {
+        dependency("org.springframework:spring-core:4.0.3.RELEASE")
+    }
 }
+
+
+ucommerceRestController {
+    targetInterface = "org.ucommerce.modules.inventory.services.AtpService"
+    moduleName = "inventory"
+}
+
+
+//restController {
+//    targetInterface = "org.ucommerce.modules.inventory.services.AtpService"
+//    //foos = null;
+//  //FIXME: make the extension class in rest controller generator take a list of configs, each with a module name, target package and java @ExternalService interface
+////    bars = listOf(
+////        Bar("someValue"),
+////        Bar("otherValue")
+////    )
+//}
 
 
 group = "org.ucommerce"
@@ -49,4 +60,11 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar") {
+    enabled = false
+}
+tasks.getByName<org.gradle.jvm.tasks.Jar>("jar") {
+    enabled = true
 }

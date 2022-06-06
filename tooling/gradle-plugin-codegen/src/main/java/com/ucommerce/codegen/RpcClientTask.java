@@ -58,6 +58,11 @@ public abstract class RpcClientTask extends DefaultTask {
         CodegenPlugin.attemptToGenerateCode(project, builder, extension.getTargetInterface(), getGeneratedFileDir());
 
         logger.info("Finished building RcpClient code for " + extension.getTargetInterface() + " with module " + extension.getModuleName());
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

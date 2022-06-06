@@ -3,6 +3,7 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/apps/service-consumer-app" />
+    <file type="web" url="file://$PROJECT_DIR$/apps/tooling-test-app" />
     <file type="web" url="file://$PROJECT_DIR$/dual-service-impl" />
     <file type="web" url="file://$PROJECT_DIR$/libraries" />
     <file type="web" url="file://$PROJECT_DIR$/modules" />
