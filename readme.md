@@ -193,4 +193,11 @@ The attempt is to get a build script command like this to work:
 
 > ./gradlew -b apps/tooling-test-app/build.gradle.kts clean build test
 
-Update: was successful. Now the focus can be on github actions which should work out of the box. 
+Update: was successful. Now the focus can be on github actions which should work out of the box.
+
+A problem occured when running the scripts on github. The gradlew script in the root folder does not have
+the executable bit (not set by windows). 
+
+This helped:
+> https://stackoverflow.com/questions/58282791/why-when-i-use-github-actions-ci-for-a-gradle-project-i-face-gradlew-permiss
+> git update-index --chmod=+x gradlew
