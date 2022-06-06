@@ -23,6 +23,7 @@ jobs:
       - name: Execute 'tooling test app' build
         run: ./gradlew -b apps/tooling-test-app/build.gradle.kts clean build test
 
+
       - name: Publish 'tooling test app' Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
@@ -30,8 +31,9 @@ jobs:
           files: "apps/tooling-test-app/build/test-results/**/*.xml"
 
 # Tooling module
+
       - name: Execute 'tooling module' build
-          run: ./gradlew -b tooling/build.gradle.kts clean build test
+        run: ./gradlew -b tooling/build.gradle.kts clean build test
 
       - name: Publish 'Tooling code generator' Results
         uses: EnricoMi/publish-unit-test-result-action@v1
