@@ -9,6 +9,20 @@ consuming the external service. Assuming the clients are Java based.
 This project will demonstrate that the external service might be better implemented in Java (plain Java interface) and the marshalling logic auto-generated from that.
 Note that the bit-stream implementation does not make a difference there. REST layers and message queue producer/consumer can all be generated from the defined Java interface.
 
+
+
+### Composite build
+List of individual gradle projects.
+
+- dual-service-impl
+- apps/service-consumer-app
+- apps/tooling-test-app
+- libraries
+- tooling
+- shared-kernel
+- modules
+- modules/inventory-api
+
 ## A diary of sorts
 ### 24-04-2022 - REST layer code generation. 
 Got the custom annotation processor to work with Intellij<->Gradle<->Google auto-service.

@@ -95,7 +95,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PostMapping("/get-bar")
-                public BarRecord getBar(BarQuery query) {
+                public BarRecord getBar(@RequestBody BarQuery query) {
                     
                     return this.delegate.getBar(query);
                                 
@@ -172,7 +172,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PostMapping("/create-bar")
-                public String createBar(BarRecord record) {
+                public String createBar(@RequestBody BarRecord record) {
                     
                     return this.delegate.createBar(record);
                                 
@@ -212,7 +212,7 @@ class SpringRestControllerBuilderTest {
 
         assertEquals("""
                 @PutMapping("/update-bar")
-                public void updateBar(BarRecord record) {
+                public void updateBar(@RequestBody BarRecord record) {
                     
                     this.delegate.updateBar(record);
                                 
@@ -247,6 +247,7 @@ class SpringRestControllerBuilderTest {
                 import com.ucommerce.testapp.FooService;
                 import org.springframework.web.bind.annotation.GetMapping;
                 import org.springframework.web.bind.annotation.PostMapping;
+                import org.springframework.web.bind.annotation.RequestBody;
                 import org.springframework.web.bind.annotation.RequestMapping;
                 import org.springframework.web.bind.annotation.RequestParam;
                 import org.springframework.web.bind.annotation.RestController;
@@ -262,7 +263,7 @@ class SpringRestControllerBuilderTest {
                     }
                                 
                     @PostMapping("/get-bar")
-                    public BarRecord getBar(BarQuery query) {
+                    public BarRecord getBar(@RequestBody BarQuery query) {
                                 
                         return this.delegate.getBar(query);
                                 

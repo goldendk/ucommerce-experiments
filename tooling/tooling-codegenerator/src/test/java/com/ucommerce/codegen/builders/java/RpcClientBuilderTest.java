@@ -84,7 +84,7 @@ public class RpcClientBuilderTest {
                             builder.appendQuery("name", name);
                         }
                             
-                        HttpRequest request = HttpRequest.newBuilder()
+                        HttpRequest request = serviceRpcClient.createRequestBuilder()
                                 .GET()
                                 .uri(builder.uri())
                                 //FIXME: configurable timeouts.
@@ -108,19 +108,19 @@ public class RpcClientBuilderTest {
 
 
         assertEquals(SourceBuilderUtil.addIndentation("""
-                 
-                    URIBuilder builder = new URIBuilder()
-                            .schemeAndHost(schemeHostAndPort)
-                            .appendPath("/ucommerce/api/test/crud-bar-service/create-bar");
-                        
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
-                            .uri(builder.uri())
-                            //FIXME: configurable timeouts.
-                            .timeout(Duration.ofSeconds(10L))
-                            .build();
-                        
-                    return serviceRpcClient.execute(request, String.class);""", 4),
+                                         
+                        URIBuilder builder = new URIBuilder()
+                                .schemeAndHost(schemeHostAndPort)
+                                .appendPath("/ucommerce/api/test/crud-bar-service/create-bar");
+                            
+                        HttpRequest request = serviceRpcClient.createRequestBuilder()
+                                .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record), StandardCharsets.UTF_8))
+                                .uri(builder.uri())
+                                //FIXME: configurable timeouts.
+                                .timeout(Duration.ofSeconds(10L))
+                                .build();
+                            
+                        return serviceRpcClient.execute(request, String.class);""", 4),
                 builder.methodBuilder.toString());
     }
 
@@ -144,7 +144,7 @@ public class RpcClientBuilderTest {
                                 builder.appendQuery("name", name);
                             }
                              
-                            HttpRequest request = HttpRequest.newBuilder()
+                            HttpRequest request = serviceRpcClient.createRequestBuilder()
                                     .DELETE()
                                     .uri(builder.uri())
                                     //FIXME: configurable timeouts.
@@ -162,6 +162,7 @@ public class RpcClientBuilderTest {
             import com.ucommerce.testapp.BarRecord;
             import com.ucommerce.testapp.CrudBarService;
             import java.net.http.HttpRequest;
+            import java.nio.charset.StandardCharsets;
             import java.time.Duration;
             import org.apache.commons.lang3.StringUtils;
             import org.ucommerce.shared.rest.client.ServiceRpcClient;
@@ -170,7 +171,7 @@ public class RpcClientBuilderTest {
             public class CrudBarServiceRpcClient implements CrudBarService {
                         
                 private ServiceRpcClient serviceRpcClient = new ServiceRpcClient();
-                
+                        
                 private final String schemeHostAndPort;
                         
                 public CrudBarServiceRpcClient(String schemeHostAndPort) {
@@ -179,16 +180,16 @@ public class RpcClientBuilderTest {
                     this.schemeHostAndPort = schemeHostAndPort;
                         
                 }
-
+                        
                 @Override
                 public String createBar(BarRecord record) {
-                
+                        
                     URIBuilder builder = new URIBuilder()
                             .schemeAndHost(schemeHostAndPort)
                             .appendPath("/ucommerce/api/test/crud-bar-service/create-bar");
                         
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
+                    HttpRequest request = serviceRpcClient.createRequestBuilder()
+                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record), StandardCharsets.UTF_8))
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
                             .timeout(Duration.ofSeconds(10L))
@@ -196,10 +197,10 @@ public class RpcClientBuilderTest {
                         
                     return serviceRpcClient.execute(request, String.class);
                 }
-                
+                        
                 @Override
                 public void deleteBar(String name) {
-                
+                        
                     URIBuilder builder = new URIBuilder()
                             .schemeAndHost(schemeHostAndPort)
                             .appendPath("/ucommerce/api/test/crud-bar-service/delete-bar");
@@ -208,7 +209,7 @@ public class RpcClientBuilderTest {
                         builder.appendQuery("name", name);
                     }
                         
-                    HttpRequest request = HttpRequest.newBuilder()
+                    HttpRequest request = serviceRpcClient.createRequestBuilder()
                             .DELETE()
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
@@ -229,7 +230,7 @@ public class RpcClientBuilderTest {
                         builder.appendQuery("name", name);
                     }
                         
-                    HttpRequest request = HttpRequest.newBuilder()
+                    HttpRequest request = serviceRpcClient.createRequestBuilder()
                             .GET()
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
@@ -246,8 +247,8 @@ public class RpcClientBuilderTest {
                             .schemeAndHost(schemeHostAndPort)
                             .appendPath("/ucommerce/api/test/crud-bar-service/get-bar");
                         
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(query)))
+                    HttpRequest request = serviceRpcClient.createRequestBuilder()
+                            .POST(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(query), StandardCharsets.UTF_8))
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
                             .timeout(Duration.ofSeconds(10L))
@@ -255,16 +256,16 @@ public class RpcClientBuilderTest {
                         
                     return serviceRpcClient.execute(request, BarRecord.class);
                 }
-                                                
+                        
                 @Override
                 public void updateBar(BarRecord record) {
-                
+                        
                     URIBuilder builder = new URIBuilder()
                             .schemeAndHost(schemeHostAndPort)
                             .appendPath("/ucommerce/api/test/crud-bar-service/update-bar");
                         
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .PUT(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record)))
+                    HttpRequest request = serviceRpcClient.createRequestBuilder()
+                            .PUT(HttpRequest.BodyPublishers.ofString(serviceRpcClient.stringify(record), StandardCharsets.UTF_8))
                             .uri(builder.uri())
                             //FIXME: configurable timeouts.
                             .timeout(Duration.ofSeconds(10L))
@@ -272,7 +273,7 @@ public class RpcClientBuilderTest {
                         
                     serviceRpcClient.execute(request);
                 }
-                
+                        
             }
             """;
 

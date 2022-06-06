@@ -18,6 +18,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
+# Tooling test application
+
       - name: Execute 'tooling test app' build
         run: ./gradlew -b apps/tooling-test-app/build.gradle.kts clean build test
 
@@ -27,3 +29,12 @@ jobs:
         with:
           files: "apps/tooling-test-app/build/test-results/**/*.xml"
 
+# Tooling module
+      - name: Execute 'tooling module' build
+          run: ./gradlew -b tooling/build.gradle.kts clean build test
+
+      - name: Publish 'Tooling code generator' Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: "tooling/tooling-codegenerator/build/test-results/**/*.xml"
