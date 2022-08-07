@@ -11,5 +11,5 @@ repositories {
 }
 
 dependencies {
-
+    implementation("org.ucommerce:ucommerce-inventory-api:1.0-SNAPSHOT")
 }

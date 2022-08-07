@@ -48,6 +48,7 @@
             <option value="$PROJECT_DIR$/inventory/inventory-core" />
             <option value="$PROJECT_DIR$/inventory/inventory-rest" />
             <option value="$PROJECT_DIR$/inventory/inventory-rest-client" />
+            <option value="$PROJECT_DIR$/inventory/inventory-test" />
             <option value="$PROJECT_DIR$/test-app" />
             <option value="$PROJECT_DIR$/../shared-kernel" />
             <option value="$PROJECT_DIR$/../tooling" />

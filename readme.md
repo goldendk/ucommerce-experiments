@@ -222,3 +222,11 @@ to the workflow file.
 Using unit test publish plugin 
 >https://github.com/EnricoMi/publish-unit-test-result-action#github-actions-job-summary
 
+### Inventory module - the fun part
+Implementation of the inventory module starts now. The intent of this is multi-fold:
+- Allow for template method pattern in main service functions (e.g. getAtp(...)).
+- Implement and test (serialized) exception handling in the client application.
+- Add custom request flags to service request (e.g. includeSiblingProducts)
+- Add implementation of template method pattern (e.g.  includeSiblingProducts)
+- Test out dynamic data model (document based storage ?) (atp service uses a cache so should be easy to do)
+- Use Apache Java Caching System (https://commons.apache.org/proper/commons-jcs/)

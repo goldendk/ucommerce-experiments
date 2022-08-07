@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/../../modules" name="modules">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../modules" />
+                  <project path="$PROJECT_DIR$/../../modules/inventory" />
+                  <project path="$PROJECT_DIR$/../../modules/inventory/inventory-core" />
+                  <project path="$PROJECT_DIR$/../../modules/inventory/inventory-rest" />
+                  <project path="$PROJECT_DIR$/../../modules/inventory/inventory-rest-client" />
+                  <project path="$PROJECT_DIR$/../../modules/inventory/inventory-test" />
+                  <project path="$PROJECT_DIR$/../../modules/test-app" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../modules/inventory/inventory-api" name="ucommerce-inventory-api">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../modules/inventory/inventory-api" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../libraries" name="libraries">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../libraries" />
+                  <project path="$PROJECT_DIR$/../../libraries/annotation-processor" />
+                  <project path="$PROJECT_DIR$/../../libraries/rest-client-shared" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../tooling" name="tooling">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../tooling" />
+                  <project path="$PROJECT_DIR$/../../tooling/gradle-plugin-codegen" />
+                  <project path="$PROJECT_DIR$/../../tooling/tooling-codegenerator" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/../../shared-kernel" name="shared-kernel">
+                <projects>
+                  <project path="$PROJECT_DIR$/../../shared-kernel" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/../../libraries" />
+            <option value="$PROJECT_DIR$/../../libraries/annotation-processor" />
+            <option value="$PROJECT_DIR$/../../libraries/rest-client-shared" />
+            <option value="$PROJECT_DIR$/../../modules" />
+            <option value="$PROJECT_DIR$/../../modules/inventory" />
+            <option value="$PROJECT_DIR$/../../modules/inventory/inventory-api" />
+            <option value="$PROJECT_DIR$/../../modules/inventory/inventory-core" />
+            <option value="$PROJECT_DIR$/../../modules/inventory/inventory-rest" />
+            <option value="$PROJECT_DIR$/../../modules/inventory/inventory-rest-client" />
+            <option value="$PROJECT_DIR$/../../modules/inventory/inventory-test" />
+            <option value="$PROJECT_DIR$/../../modules/test-app" />
+            <option value="$PROJECT_DIR$/../../shared-kernel" />
+            <option value="$PROJECT_DIR$/../../tooling" />
+            <option value="$PROJECT_DIR$/../../tooling/gradle-plugin-codegen" />
+            <option value="$PROJECT_DIR$/../../tooling/tooling-codegenerator" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

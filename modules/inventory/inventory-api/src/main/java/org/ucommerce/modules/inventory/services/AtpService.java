@@ -1,35 +1,25 @@
 package org.ucommerce.modules.inventory.services;
 
 import org.ucommerce.modules.inventory.commands.ReservationRequest;
-import org.ucommerce.modules.inventory.model.Inventory;
-import org.ucommerce.modules.inventory.model.LocationRequest;
-import org.ucommerce.modules.inventory.model.ProductRequest;
+import org.ucommerce.modules.inventory.model.AtpRequestData;
+import org.ucommerce.modules.inventory.model.AtpResult;
 import org.ucommerce.shared.kernel.services.ExternalService;
 
 @ExternalService
 public interface AtpService {
 
     /**
-     * Returns the ATP in all locations requested by product.
+     * Returns the ATP for all products and locations provided. Use '*' if all locations or products should be returned.
      *
      * @param productRequest
      * @return
      */
-    Inventory getAtp(ProductRequest productRequest);
-
-    /**
-     * Returns the ATP for all products requested by location.
-     *
-     * @param productRequest
-     * @return
-     */
-    Inventory getAtp(LocationRequest productRequest);
+    AtpResult getAtp(AtpRequestData productRequest);
 
     /**
      * Moves the given inventory to a reserved column.
      *
-     * @param inventories        a list of inventories to reserve.
-     * @param externalIdentifier an identifier from e.g. an order system.
+     * @param reservationRequest
      */
     void createReservation(ReservationRequest reservationRequest);
 

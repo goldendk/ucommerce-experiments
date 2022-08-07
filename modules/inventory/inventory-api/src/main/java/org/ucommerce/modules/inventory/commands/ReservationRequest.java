@@ -1,6 +1,6 @@
 package org.ucommerce.modules.inventory.commands;
 
-import org.ucommerce.modules.inventory.model.Inventory;
+import org.ucommerce.modules.inventory.model.Atp;
 
-public record ReservationRequest(Inventory[] inventory, String externalIdentifier) {
+public record ReservationRequest(Atp[] atp, String externalIdentifier) {
 }
