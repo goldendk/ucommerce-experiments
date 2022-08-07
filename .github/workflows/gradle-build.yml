@@ -52,4 +52,4 @@ jobs:
         if: always()
         with:
           files: "modules/inventory/inventory-core/build/test-results/**/*.xml"
-          check_name: "tooling/tooling-codegenerator results"
+          check_name: "inventory/inventory-core results"
