@@ -42,3 +42,14 @@ jobs:
         with:
           files: "tooling/tooling-codegenerator/build/test-results/**/*.xml"
           check_name: "tooling/tooling-codegenerator results"
+# Inventory core module
+
+      - name: Execute 'tooling module' build
+        run: ./gradlew -b modules/build.gradle.kts inventory:inventory-core:test
+
+      - name: Publish 'Tooling code generator' Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: "modules/inventory/inventory-core/build/test-results/**/*.xml"
+          check_name: "tooling/tooling-codegenerator results"
