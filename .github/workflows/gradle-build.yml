@@ -44,7 +44,7 @@ jobs:
           check_name: "tooling/tooling-codegenerator results"
 # Inventory core module
 
-      - name: Execute 'tooling module' build
+      - name: Execute 'Inventory core' build
         run: ./gradlew -b modules/build.gradle.kts inventory:inventory-core:test
 
       - name: Publish 'Tooling code generator' Results
