@@ -3,6 +3,7 @@ package org.ucommerce.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.ucommerce.modules.inventory.commands.ReservationRequest;
+import org.ucommerce.modules.inventory.model.AtpRequestData;
 import org.ucommerce.modules.inventory.model.AtpResult;
 import org.ucommerce.modules.inventory.services.AtpService;
 
@@ -12,13 +13,10 @@ public class BeanConfig {
     @Bean
     public AtpService atpService() {
         return new AtpService() {
-            @Override
-            public AtpResult getAtp(ProductRequest productRequest) {
-                return null;
-            }
+
 
             @Override
-            public AtpResult getAtp(LocationRequest productRequest) {
+            public AtpResult getAtp(AtpRequestData productRequest) {
                 return null;
             }
 
