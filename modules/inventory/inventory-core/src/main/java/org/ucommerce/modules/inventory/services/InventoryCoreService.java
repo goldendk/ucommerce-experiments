@@ -1,7 +1,10 @@
 package org.ucommerce.modules.inventory.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ucommerce.modules.inventory.commands.ReservationRequest;
 import org.ucommerce.modules.inventory.model.*;
+import org.ucommerce.shared.kernel.UCConstants;
 import org.ucommerce.shared.kernel.factory.ObjectFactory;
 import org.ucommerce.shared.kernel.ids.ProductId;
 
@@ -9,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryCoreService implements AtpService {
+    private static Logger logger = LoggerFactory.getLogger(InventoryCoreService.class);
     private final InventoryRepository inventoryRepository;
 
     public InventoryCoreService(InventoryRepository inventoryRepository) {
@@ -29,8 +33,19 @@ public class InventoryCoreService implements AtpService {
                     modifier.modifyAtp(calculation, productId, locationId);
                 }
 
-                atpResult.add(new Atp(calculation.getCurrentAmount(), locationId, productId));
+                Iterable<AtpLookupListener> Listeners = InventoryCore.getAtpCore().getAtpLookupListeners();
+                Listeners.forEach(e -> {
+                    //FIXME: This gives stack overflow. We should instead register listeners with unique keys so that an atp request can
+                    // be made in such a way that the same listener is never invoked when calling the ATP service recursively.
+                    e.accept(this, calculation, productId, locationId, requestData.flags());
+                });
 
+                if (calculation.getCurrentAmount() == null) {
+                    logger.trace("Setting amount to <0> for product {} at location {}", productId, locationId);
+                    calculation.addAmount(new Amount(0L, UCConstants.INVENTORY_UNIT_PCS), "default-value");
+                }
+
+                atpResult.add(new Atp(calculation.getCurrentAmount(), locationId, productId));
             }
         }
 

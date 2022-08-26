@@ -15,4 +15,5 @@ public abstract class ObjectFactory {
 
     public abstract <C> void register(Map<Class<? super C>, Class<C>> theMap);
 
+    public abstract <C> void registerInstance(Class<? super C> superClass, C instance);
 }

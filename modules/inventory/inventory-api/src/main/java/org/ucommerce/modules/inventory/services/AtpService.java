@@ -12,7 +12,7 @@ public interface AtpService {
      * Returns the ATP for all products and locations provided. Use '*' if all locations or products should be returned.
      *
      * @param productRequest
-     * @return
+     * @return result of calculation. Will always be non-null.
      */
     AtpResult getAtp(AtpRequestData productRequest);
 

@@ -18,4 +18,10 @@ public class CachedObjectFactory extends DefaultObjectFactory {
             return object;
         }
     }
+
+    @Override
+    public <C> void registerInstance(Class<? super C> superClass, C instance) {
+        super.registerInstance(superClass, instance);
+        OBJECT_CACHE.put(superClass, instance);
+    }
 }

@@ -1,7 +1,9 @@
-package org.ucommerce.modules.inventory.services;
+package org.ucommerce.modules.inventory;
 
-import org.ucommerce.modules.inventory.TestData;
+import org.ucommerce.modules.inventory.InventoryTestData;
 import org.ucommerce.modules.inventory.model.LocationId;
+import org.ucommerce.modules.inventory.services.InventoryRepository;
+import org.ucommerce.modules.inventory.services.InventoryStock;
 import org.ucommerce.shared.kernel.ids.CacheId;
 import org.ucommerce.shared.kernel.ids.ProductId;
 
@@ -18,7 +20,7 @@ public class MockInventoryRepository implements InventoryRepository {
 
 
     public void addStock(CacheId cacheId, String locationId, String productId, int stock) {
-        addStock(cacheId, new LocationId(TestData.LOCATION_TYPE_SITE, locationId), new ProductId(productId), stock);
+        addStock(cacheId, new LocationId(InventoryTestData.LOCATION_TYPE_SITE, locationId), new ProductId(productId), stock);
     }
 
     public void addStock(CacheId cacheId, LocationId locationId, ProductId productId, int stock) {

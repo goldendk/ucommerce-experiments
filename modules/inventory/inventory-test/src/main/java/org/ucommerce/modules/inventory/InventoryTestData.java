@@ -3,7 +3,7 @@ package org.ucommerce.modules.inventory;
 import org.ucommerce.modules.inventory.model.LocationId;
 import org.ucommerce.shared.kernel.ids.ProductId;
 
-public class TestData {
+public class InventoryTestData {
     public static final String LOCATION_TYPE_SITE = "Site";
     public static final LocationId site1 = new LocationId(LOCATION_TYPE_SITE, "1" );
     public static final LocationId site2 = new LocationId(LOCATION_TYPE_SITE, "2" );

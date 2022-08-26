@@ -8,12 +8,17 @@ import java.util.*;
 public class DefaultObjectFactory extends ObjectFactory {
 
     private static final Map<Class, Class> implementationMap = new HashMap<>();
+    private static final Map<Class, Object> instanceMap = new HashMap<>();
 
     public <T> T createObject(Class<T> clazz) {
         Objects.requireNonNull(clazz, "Class to lookup cannot be null");
 
+        if (instanceMap.get(clazz) != null) {
+            return (T) instanceMap.get(clazz);
+        }
+
         Class typeToConstruct = implementationMap.get(clazz);
-        if(typeToConstruct == null){
+        if (typeToConstruct == null) {
             throw new IllegalStateException("Type to construct is null, asked to construct: " + clazz.getName());
         }
 
@@ -83,6 +88,11 @@ public class DefaultObjectFactory extends ObjectFactory {
         theMap.forEach((k, v) -> {
             register(k, v);
         });
+    }
+
+    @Override
+    public <C> void registerInstance(Class<? super C> superClass, C instance) {
+        instanceMap.put(superClass, instance);
     }
 
 }

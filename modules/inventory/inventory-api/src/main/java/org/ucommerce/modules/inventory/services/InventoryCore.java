@@ -10,4 +10,8 @@ public class InventoryCore {
     public static AtpCore getAtpCore() {
         return ATP_CORE;
     }
+
+    public static void clear() {
+        ATP_CORE.clearAtpLookupListeners();
+    }
 }

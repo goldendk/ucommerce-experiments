@@ -5,7 +5,7 @@ import org.ucommerce.shared.kernel.UCConstants;
 import org.ucommerce.shared.kernel.ids.CacheId;
 
 /**
- * Modifer that adds the stock from the name cache to the result of the ATP calculation.
+ * Modifier that adds the stock from the named cache to the result of the ATP calculation.
  */
 public class AddStockAtpModifier extends NamedCacheModifier {
     public AddStockAtpModifier(CacheId cacheId) {
