@@ -8,7 +8,7 @@ import org.ucommerce.apps.inventory.substitution.ReplacementProductRule;
 import org.ucommerce.apps.inventory.substitution.ReplacementRepository;
 import org.ucommerce.modules.inventory.InventoryTestData;
 import org.ucommerce.modules.inventory.InventoryTestFactory;
-import org.ucommerce.modules.inventory.MockInventoryRepository;
+import org.ucommerce.modules.inventory.services.MockInventoryRepository;
 import org.ucommerce.modules.inventory.model.*;
 import org.ucommerce.modules.inventory.services.AtpService;
 import org.ucommerce.modules.inventory.services.InventoryCore;

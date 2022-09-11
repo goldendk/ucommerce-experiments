@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ucommerce.modules.inventory.InventoryTestData;
 import org.ucommerce.modules.inventory.InventoryTestFactory;
-import org.ucommerce.modules.inventory.MockInventoryRepository;
 import org.ucommerce.modules.inventory.model.*;
 import org.ucommerce.shared.kernel.factory.ObjectFactory;
 import org.ucommerce.shared.kernel.ids.ProductId;

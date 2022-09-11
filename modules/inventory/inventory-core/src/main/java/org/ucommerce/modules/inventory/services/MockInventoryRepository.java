@@ -1,9 +1,7 @@
-package org.ucommerce.modules.inventory;
+package org.ucommerce.modules.inventory.services;
 
-import org.ucommerce.modules.inventory.InventoryTestData;
+import org.ucommerce.modules.inventory.model.Amount;
 import org.ucommerce.modules.inventory.model.LocationId;
-import org.ucommerce.modules.inventory.services.InventoryRepository;
-import org.ucommerce.modules.inventory.services.InventoryStock;
 import org.ucommerce.shared.kernel.ids.CacheId;
 import org.ucommerce.shared.kernel.ids.ProductId;
 
@@ -19,11 +17,7 @@ public class MockInventoryRepository implements InventoryRepository {
     private Map<CacheId, Map<LocationId, Collection<ProductId>>> locationToProduct = new HashMap<>();
 
 
-    public void addStock(CacheId cacheId, String locationId, String productId, int stock) {
-        addStock(cacheId, new LocationId(InventoryTestData.LOCATION_TYPE_SITE, locationId), new ProductId(productId), stock);
-    }
-
-    public void addStock(CacheId cacheId, LocationId locationId, ProductId productId, int stock) {
+    public void addStock(CacheId cacheId, LocationId locationId, ProductId productId, long stock) {
         checkCacheExist(cacheId);
 
         String key = toKey(locationId, productId);
@@ -74,5 +68,10 @@ public class MockInventoryRepository implements InventoryRepository {
             return null;
         }
         return inventoryStocks.get(cacheId).get(toKey(locationId, productId));
+    }
+
+    @Override
+    public void setStock(CacheId cacheId, LocationId location, ProductId productId, Amount amount) {
+        addStock(cacheId, location, productId, amount.quantity());
     }
 }

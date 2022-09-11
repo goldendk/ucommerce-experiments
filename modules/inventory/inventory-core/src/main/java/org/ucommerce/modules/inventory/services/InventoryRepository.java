@@ -1,5 +1,6 @@
 package org.ucommerce.modules.inventory.services;
 
+import org.ucommerce.modules.inventory.model.Amount;
 import org.ucommerce.modules.inventory.model.LocationId;
 import org.ucommerce.shared.kernel.ids.CacheId;
 import org.ucommerce.shared.kernel.ids.ProductId;
@@ -14,4 +15,5 @@ public interface InventoryRepository {
 
     InventoryStock getStock(CacheId cacheId, LocationId locationId, ProductId productId);
 
+    void setStock(CacheId cacheId, LocationId location, ProductId productId, Amount amount);
 }

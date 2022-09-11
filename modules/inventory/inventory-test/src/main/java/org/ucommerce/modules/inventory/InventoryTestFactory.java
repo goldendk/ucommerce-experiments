@@ -2,6 +2,7 @@ package org.ucommerce.modules.inventory;
 
 import org.ucommerce.modules.inventory.services.AtpModifierListProvider;
 import org.ucommerce.modules.inventory.services.InventoryRepository;
+import org.ucommerce.modules.inventory.services.MockInventoryRepository;
 import org.ucommerce.shared.kernel.factory.ObjectFactory;
 
 import java.util.Map;
