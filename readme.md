@@ -230,3 +230,11 @@ Implementation of the inventory module starts now. The intent of this is multi-f
 - Add implementation of template method pattern (e.g.  includeSiblingProducts)
 - Test out dynamic data model (document based storage ?) (atp service uses a cache so should be easy to do)
 - Use Apache Java Caching System (https://commons.apache.org/proper/commons-jcs/)
+
+
+## Interfaces 
+It has come to my attention that external interfaces need their own modules since the plugin architecture needs to depend on 
+internal services.
+
+Separating the internal and external interfaces allows for much better 'interfaces segregation'.
+
